@@ -1,32 +1,14 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Tab 1</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">
-            Tab 1
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
+  <div id="content">
+    <canvas id="root" />
+  </div>
 
-      <div id="content">
-        <canvas id="root" />
-      </div>
-
-      <div @click="save">
-        Save
-      </div>
-    </ion-content>
-  </ion-page>
+  <div @click="save">
+    Save
+  </div>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue'
 import { fabric } from 'fabric'
 import { onMounted } from 'vue'
 
