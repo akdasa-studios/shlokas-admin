@@ -1,0 +1,84 @@
+name: Tests
+on: push
+
+jobs:
+  unit:
+    name: 🤖 Unit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v2
+
+      - name: 📦 Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          cache: npm
+
+      - name: 📦 Install dependencies
+        run: npm ci --audit=false
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔬 Tests
+        run: npm run test:unit
+
+      - name: 🚚 Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: unit
+          path: .dev/unit/
+          retention-days: 5
+
+      - name: 📜 Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  e2e:
+    name: 🚀 E2E
+    needs: unit
+    permissions:
+      packages: read
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v3
+
+    - name: 🌍 Environment
+      uses: isbang/compose-action@v1.4.1
+      with:
+        compose-file: "./docker-compose.yml"
+        down-flags: "--volumes"
+
+    - name: 📦 Install Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: 📦 Install dependencies
+      run: npm ci --audit=false
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 📦 Install browsers
+      run: npx playwright install --with-deps
+
+    - name: 🔬 run tests
+      run: npx playwright test
+
+    - name: 🚚 Upload artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: e2e
+        path: .dev/e2e
+        retention-days: 5
