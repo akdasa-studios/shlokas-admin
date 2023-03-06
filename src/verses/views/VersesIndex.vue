@@ -1,8 +1,6 @@
 <template>
   <ion-page>
-    <Suspense>
-      <ion-router-outlet />
-    </Suspense>
+    <ion-router-outlet />
   </ion-page>
 </template>
 

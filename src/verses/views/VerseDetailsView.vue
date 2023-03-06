@@ -5,31 +5,27 @@
         <ion-buttons slot="start">
           <ion-back-button />
         </ion-buttons>
-        <ion-title>{{ verse.number }} / Interlinear</ion-title>
+        <ion-title>{{ verse?.number }} / Interlinear</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content
       class="ion-padding"
     >
-      <VerseTextView
-        :lines="verse.text"
+      <component
+        :is="component"
+        :verse="verse"
+        @change="onVerseChanged"
       />
-
-      <ion-button
-        :router-link="'/tabs/verses/' + verse.id + '/interlinear'"
-        router-direction="forward"
-      >
-        sdsd
-      </ion-button>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonButton } from '@ionic/vue'
-import { defineProps } from 'vue'
-import VerseTextView from '../components/VerseTextView.vue'
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton } from '@ionic/vue'
+import { defineProps, onMounted, ref, shallowRef } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+import { Verse } from '../models/verse'
 import { useVersesStore } from '../stores/versesStore'
 
 /* -------------------------------------------------------------------------- */
@@ -38,12 +34,30 @@ import { useVersesStore } from '../stores/versesStore'
 
 const props = defineProps<{
   id: string
+  component: Promise<object>
 }>()
+
+const component = shallowRef<any>()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
 const versesStore = useVersesStore()
-const verse = await versesStore.get(props.id)
+const verse = ref()
+
+
+/* -------------------------------------------------------------------------- */
+/*                                  Handlers                                  */
+/* -------------------------------------------------------------------------- */
+
+onMounted(async () => {
+  verse.value = await versesStore.get(props.id)
+  // @ts-ignore
+  component.value = (await props.component).default
+})
+
+const onVerseChanged = useDebounceFn((changedVerse: Verse) => {
+  versesStore.update(changedVerse)
+}, 1000)
 </script>

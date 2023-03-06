@@ -15,5 +15,9 @@ export function useVersesStore() {
     }
   }
 
-  return { get }
+  async function update(verse: Verse) {
+    console.log(verse)
+  }
+
+  return { get, update }
 }
