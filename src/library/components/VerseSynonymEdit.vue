@@ -56,6 +56,7 @@ const synonym = reactive<Synonym>(props.verse.synonyms[props.synonymId])
 watch([synonym], () => {
   const copy = {...props.verse}
   copy.synonyms[props.synonymId] = toRaw(synonym)
+  // @ts-ignore
   copy.synonyms[props.synonymId].lineNumber = parseInt(copy.synonyms[props.synonymId].lineNumber as string)
   emit('change', copy)
 })
