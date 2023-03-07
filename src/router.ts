@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from '@ionic/vue-router'
 import { RouteRecordRaw } from 'vue-router'
 import TabsPage from './views/TabsPage.vue'
 
+import { routes as libraryRoute } from './library'
+
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -15,40 +18,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '',
         redirect: '/tabs/verses'
       },
-      // {
-      //   path: 'verses',
-      //   component: () => import('@/verses/views/VersesView.vue'),
-      //   children: [
-      //     {
-      //       path: '',
-      //       component: () => import('@/verses/views/VersesListView.vue'),
-      //     },
-      //     {
-      //       path: ':id',
-      //       component: () => import('@/verses/views/VerseDetailsView.vue'),
-      //       props: route => ({
-      //         id: route.params.id,
-      //         component: import('@/verses/components/VerseView.vue')
-      //       }),
-      //     },
-      //     {
-      //       path: ':id/interlinear',
-      //       component: () => import('@/verses/views/VerseDetailsView.vue'),
-      //       props: route => ({
-      //         id: route.params.id,
-      //         component: import('@/verses/components/InterlinearTranslation.vue')
-      //       }),
-      //     },
-      //     {
-      //       path: ':id/content',
-      //       component: () => import('@/verses/views/VerseDetailsView.vue'),
-      //       props: route => ({
-      //         id: route.params.id,
-      //         component: import('@/verses/components/VerseContent.vue')
-      //       }),
-      //     }
-      //   ]
-      // },
+      ...libraryRoute,
       {
         path: 'tab1',
         component: () => import('@/views/Tab1Page.vue')

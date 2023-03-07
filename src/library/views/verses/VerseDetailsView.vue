@@ -5,7 +5,12 @@
         <ion-buttons slot="start">
           <ion-back-button />
         </ion-buttons>
-        <ion-title>{{ verse?.number }} / Interlinear</ion-title>
+        <ion-title>
+          {{ verse?.number }}
+          <span v-if="title">
+            :: {{ title }}
+          </span>
+        </ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -15,6 +20,7 @@
       <component
         :is="component"
         :verse="verse"
+        v-bind="props.componentProps"
         @change="onVerseChanged"
       />
     </ion-content>
@@ -23,10 +29,10 @@
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton } from '@ionic/vue'
-import { defineProps, onMounted, ref, shallowRef } from 'vue'
+import { defineProps, onMounted, shallowRef } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { Verse } from '../models/verse'
-import { useVersesStore } from '../stores/versesStore'
+import { Verse } from '../../models/verse'
+import { useVersesStore } from '../../stores/versesStore'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -34,7 +40,9 @@ import { useVersesStore } from '../stores/versesStore'
 
 const props = defineProps<{
   id: string
-  component: Promise<object>
+  component: Promise<object>,
+  componentProps?: object,
+  title?: string
 }>()
 
 const component = shallowRef<any>()
@@ -44,7 +52,7 @@ const component = shallowRef<any>()
 /* -------------------------------------------------------------------------- */
 
 const versesStore = useVersesStore()
-const verse = ref()
+const verse = shallowRef()
 
 
 /* -------------------------------------------------------------------------- */
