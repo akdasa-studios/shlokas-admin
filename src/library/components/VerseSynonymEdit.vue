@@ -10,6 +10,17 @@
     v-model="synonym.translation"
     placeholder="Translation"
   />
+
+  <ion-input
+    v-model="synonym.shortTranslation"
+    placeholder="Short translation"
+  />
+
+  <ion-input
+    v-model="synonym.lineNumber"
+    type="number"
+    placeholder="Line Number"
+  />
 </template>
 
 <script setup lang="ts">
@@ -45,6 +56,7 @@ const synonym = reactive<Synonym>(props.verse.synonyms[props.synonymId])
 watch([synonym], () => {
   const copy = {...props.verse}
   copy.synonyms[props.synonymId] = toRaw(synonym)
+  copy.synonyms[props.synonymId].lineNumber = parseInt(copy.synonyms[props.synonymId].lineNumber as string)
   emit('change', copy)
 })
 </script>

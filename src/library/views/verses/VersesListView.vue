@@ -17,14 +17,15 @@
       <ion-list>
         <ion-item
           v-for="verse in verses"
-          :key="verse.id"
+          :key="verse._id"
         >
           <ion-label
-            :router-link="'/tabs/verses/' + verse.id"
+            class="ion-text-wrap"
+            :router-link="'/tabs/verses/' + verse._id"
             router-direction="forward"
           >
-            <h2>{{ verse.title }}</h2>
-            <p>{{ verse.content }}</p>
+            <h2>{{ verse.number }}</h2>
+            <p>{{ verse.translation }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -34,16 +35,22 @@
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonList, IonItem } from '@ionic/vue'
+import { onMounted, ref } from 'vue'
+import { useVersesStore } from '@/library/stores/versesStore'
+import { Verse } from '@/library/models/verse'
 
-export interface Verse {
-  id: number
-  title: string
-  content: string
-}
+/* -------------------------------------------------------------------------- */
+/*                                    State                                   */
+/* -------------------------------------------------------------------------- */
 
-const verses = [
-  { id: 1, title: 'First', content: 'First content' },
-  { id: 2, title: 'Second', content: 'Second content' },
-  { id: 3, title: 'Third', content: 'Third content' }
-]
+const versesStore = useVersesStore()
+const verses = ref<Verse[]>([])
+
+/* -------------------------------------------------------------------------- */
+/*                                  Handlers                                  */
+/* -------------------------------------------------------------------------- */
+
+onMounted(async () => {
+  verses.value  = await versesStore.all()
+})
 </script>

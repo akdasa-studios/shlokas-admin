@@ -1,23 +1,19 @@
 <template>
-  <ion-item>
-    <ion-textarea
-      v-model="text"
-      placeholder="Text"
-      :auto-grow="true"
-    />
-  </ion-item>
+  <ion-textarea
+    v-model="text"
+    placeholder="Text"
+    :auto-grow="true"
+  />
 
-  <ion-item>
-    <ion-textarea
-      v-model="translation"
-      placeholder="Translation"
-      :auto-grow="true"
-    />
-  </ion-item>
+  <ion-textarea
+    v-model="translation"
+    placeholder="Translation"
+    :auto-grow="true"
+  />
 </template>
 
 <script setup lang="ts">
-import { IonTextarea, IonItem } from '@ionic/vue'
+import { IonTextarea } from '@ionic/vue'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { Verse } from '../models/verse'
 

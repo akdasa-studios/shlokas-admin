@@ -1,10 +1,14 @@
 export interface Synonym {
   words: string[];
   translation: string;
+  lineNumber?: number;
+
+  shortTranslation?: string;
+  positionX?: number
 }
 
 export interface Verse {
-  id: string;
+  _id: string;
   number: string;
   text: string[];
   translation: string;

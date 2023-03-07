@@ -2,39 +2,50 @@
   <div id="content">
     <canvas id="root" />
   </div>
-
-  <div @click="save">
-    Save
-  </div>
 </template>
 
 <script setup lang="ts">
 import { fabric } from 'fabric'
-import { onMounted } from 'vue'
+import { onMounted , defineProps, defineEmits } from 'vue'
+import { Verse, Synonym } from '../models/verse'
 
+/* -------------------------------------------------------------------------- */
+/*                                  Interface                                 */
+/* -------------------------------------------------------------------------- */
+
+const props = defineProps<{
+  verse: Verse
+}>()
+
+const emit = defineEmits<{
+  (event: 'change', verse: Verse): void
+}>()
+
+/* -------------------------------------------------------------------------- */
+/*                                    State                                   */
+/* -------------------------------------------------------------------------- */
 
 let canvas: any
+
+/* -------------------------------------------------------------------------- */
+/*                                  Handlers                                  */
+/* -------------------------------------------------------------------------- */
+
 onMounted(() => {
   canvas = new fabric.Canvas('root')
-  add([
-    'дхр̣тара̄шт̣ра ува̄ча',
-    'дхарма-кшетре куру-кшетре',
-    'самавета̄ йуйутсавах̣',
-    'ма̄мака̄х̣ па̄н̣д̣ава̄ш́ чаива',
-    'ким акурвата сан̃джайа'
-  ], [
-    ['дхритараштра', 'сказал'],
-    ['в месте паломничества', 'на Курукшетре'],
-    ['собравшиеся', 'желающие сражаться'],
-    ['кто на моей стороне', 'сыновья Панду', 'и', 'безусловно'],
-    ['что', 'сделали', 'о Санджая'],
-  ])
+  // canvas.renderOnAddRemove = true
+  canvas.on('object:modified', () => { save() })
+  add(props.verse.text, props.verse.synonyms)
 })
 
-function add(lines: string[], words: string[][]) {
+
+const wordToElemMap:any = {}
+const zoom = .45
+
+function add(lines: string[], words: Synonym[]) {
   const result = []
-  const fontSize = 60
-  const lineSpace = 5
+  const fontSize = 60 * zoom
+  const lineSpace = 5 * zoom
   let maxWidth = 0
   let maxHeight = 0
 
@@ -48,66 +59,64 @@ function add(lines: string[], words: string[][]) {
       hasControls: false,
       lockMovementX: true,
       lockMovementY: true,
-      // class: 'text',
-      // fill: undefined
     })
 
-    maxWidth = Math.max(text.width, maxWidth)
-    maxHeight = Math.max(text.height, maxHeight) + lineSpace
+    maxWidth = Math.max(text.width || 0, maxWidth)
+    maxHeight = Math.max(text.height || 0, maxHeight) + lineSpace
     result.push(text)
     canvas.add(text)
   }
 
   canvas.setWidth(maxWidth)
-  canvas.setHeight(maxHeight*lines.length)
+  canvas.setHeight(maxHeight * lines.length)
 
-  let i = 0
-  for (const text of result) {
+  for (const [i, text] of result.entries()) {
     text.left = maxWidth / 2
     text.top  = maxHeight * i
     text.adjustPosition('center')
-    i++
   }
 
-  for (var idx=0; idx < lines.length; idx++) {
-    const wordsCount = words[idx].length
-    for (const [wordNum, word] of words[idx].entries()) {
-      const elem = new fabric.Text(word, {
-        top: maxHeight * (idx+1),
-        left: (maxWidth / (wordsCount+1)) * (wordNum+1),
-        originX: 'center',
-        originY: 'bottom',
-        fontSize: fontSize/2,
-        fontFamily: 'Georgia',
-        fontStyle: 'italic',
-        hasControls: false,
-        lockMovementY: true,
-        fill: 'gray'
-        // class: 'text'
-      })
-      canvas.add(elem)
-    }
+  let alwn = 0
+  for (const word of words) {
+    const wordsOfLine = words.filter(x => x.lineNumber === word.lineNumber)
+    const wordsCount = wordsOfLine.length
+    const wordNum = wordsOfLine.findIndex(x => x===word)
+
+    const txt = word.shortTranslation || word.translation
+    const elem = new fabric.Text(txt, {
+      top: maxHeight * ((word.lineNumber || 0) + 1),
+      left: word.positionX ? word.positionX * maxWidth : (maxWidth / (wordsCount+1)) * (wordNum+1),
+      originX: 'center',
+      originY: 'bottom',
+      fontSize: fontSize/2,
+      fontFamily: 'Georgia',
+      fontStyle: 'italic',
+      hasControls: false,
+      lockMovementY: true,
+      fill: 'gray'
+      // class: 'text'
+    })
+    wordToElemMap[alwn++] = elem
+    canvas.add(elem)
   }
-
-  // canvas.renderAll()
-}
-
-function setSize() {
-  canvas.setHeight(500)
-  canvas.setWidth(800)
   canvas.renderAll()
+  // canvas.renderCanvas()
 }
 
 function save() {
-  console.log(canvas.toSVG())
+  const synonyms = { ...props.verse.synonyms }
+  for (const [key, elem] of Object.entries(wordToElemMap)) {
+    synonyms[key].positionX = elem.left / canvas.width
+  }
+
+  emit('change', {
+    ...props.verse,
+    synonyms: Object.values(synonyms)
+  })
 }
 </script>
 
 <style scoped>
-#root {
-  /* background-color: lightcyan; */
-}
-
 #content {
   display: flex;
   align-items: center;

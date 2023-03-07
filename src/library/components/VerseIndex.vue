@@ -48,8 +48,8 @@ const props = defineProps<{
 /* -------------------------------------------------------------------------- */
 
 const links = {
-  card: `${props.verse.id}/card`,
-  content: `${props.verse.id}/content`,
-  synonyms: `${props.verse.id}/synonyms`,
+  card: `${props.verse._id}/card`,
+  content: `${props.verse._id}/content`,
+  synonyms: `${props.verse._id}/synonyms`,
 }
 </script>
