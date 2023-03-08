@@ -37,13 +37,13 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonList, IonItem } from '@ionic/vue'
 import { onMounted, ref } from 'vue'
 import { Verse } from '@/library/models/verse'
-import { useVersesStore } from '@/library/stores/useVersesStore'
+import { useVersesListController } from '@/library/controllers/useVersesListController'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const versesStore = useVersesStore()
+const versesListController = useVersesListController()
 const verses = ref<Verse[]>([])
 
 /* -------------------------------------------------------------------------- */
@@ -51,6 +51,7 @@ const verses = ref<Verse[]>([])
 /* -------------------------------------------------------------------------- */
 
 onMounted(async () => {
-  verses.value  = await versesStore.all()
+  await versesListController.sync()
+  verses.value  = await versesListController.getAllVerses()
 })
 </script>
