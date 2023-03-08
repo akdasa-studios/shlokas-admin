@@ -1,19 +1,19 @@
 import { RouteRecordRaw } from 'vue-router'
 
-const VerseDetailsView = () => import('../views/verses/VerseDetailsView.vue')
+const VerseDetailsPage = () => import('../pages/verses/VerseDetailsPage.vue')
 
 
 export const routes: Array<RouteRecordRaw> = [{
   path: 'verses',
-  component: () => import('../views/LibraryIndex.vue'),
+  component: () => import('../pages/LibraryIndexPage.vue'),
   children: [
     {
       path: '',
-      component: () => import('../views/verses/VersesListView.vue'),
+      component: () => import('../pages/verses/VersesListPage.vue'),
     },
     {
       path: ':id',
-      component: VerseDetailsView,
+      component: VerseDetailsPage,
       props: route => ({
         id: route.params.id,
         component: import('../components/VerseIndex.vue')
@@ -21,7 +21,7 @@ export const routes: Array<RouteRecordRaw> = [{
     },
     {
       path: ':id/card',
-      component: VerseDetailsView,
+      component: VerseDetailsPage,
       props: route => ({
         id: route.params.id,
         component: import('../components/VerseCard.vue'),
@@ -30,7 +30,7 @@ export const routes: Array<RouteRecordRaw> = [{
     },
     {
       path: ':id/content',
-      component: VerseDetailsView,
+      component: VerseDetailsPage,
       props: route => ({
         id: route.params.id,
         component: import('../components/VerseContent.vue'),
@@ -39,7 +39,7 @@ export const routes: Array<RouteRecordRaw> = [{
     },
     {
       path: ':id/synonyms',
-      component: VerseDetailsView,
+      component: VerseDetailsPage,
       props: route => ({
         id: route.params.id,
         component: import('../components/VerseSynonyms.vue'),
@@ -48,7 +48,7 @@ export const routes: Array<RouteRecordRaw> = [{
     },
     {
       path: ':id/synonyms/:synonymId',
-      component: VerseDetailsView,
+      component: VerseDetailsPage,
       props: route => ({
         id: route.params.id,
         componentProps: { synonymId: parseInt(route.params.synonymId as string) },
