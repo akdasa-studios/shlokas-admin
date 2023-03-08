@@ -33,6 +33,7 @@ const router = createRouter({
   routes
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 router.beforeEach((to, from) => {
   const authStore = useAuthStore()
   if (to.name != 'login' && !authStore.isAuthenticated) {
