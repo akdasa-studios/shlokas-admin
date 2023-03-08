@@ -9,34 +9,20 @@
         >
           <ion-icon
             aria-hidden="true"
-            :icon="library"
+            :icon="libraryOutline"
           />
           <ion-label>Verses</ion-label>
         </ion-tab-button>
 
-
         <ion-tab-button
           tab="tab1"
-          href="/tabs/tab1"
+          href="/tabs/users"
         >
           <ion-icon
             aria-hidden="true"
-            :icon="triangle"
+            :icon="peopleOutline"
           />
-          <ion-label>Tab 1</ion-label>
-        </ion-tab-button>
-
-
-
-        <ion-tab-button
-          tab="tab3"
-          href="/tabs/tab3"
-        >
-          <ion-icon
-            aria-hidden="true"
-            :icon="square"
-          />
-          <ion-label>Tab 3</ion-label>
+          <ion-label>Users</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -45,5 +31,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue'
-import { library, square, triangle } from 'ionicons/icons'
+import { libraryOutline, peopleOutline } from 'ionicons/icons'
 </script>
