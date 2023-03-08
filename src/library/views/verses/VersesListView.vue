@@ -36,8 +36,8 @@
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonList, IonItem } from '@ionic/vue'
 import { onMounted, ref } from 'vue'
-import { useVersesStore } from '@/library/stores/versesStore'
 import { Verse } from '@/library/models/verse'
+import { useVersesStore } from '@/library/stores/useVersesStore'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */

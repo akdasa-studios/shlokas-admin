@@ -1,16 +1,18 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import { RouteRecordRaw } from 'vue-router'
 import TabsView from './shared/views/TabsView.vue'
+import { useAuthStore } from './auth/stores/useAuthStore'
 
-
+import { routes as authRoute } from './auth'
 import { routes as libraryRoute } from './library'
 import { routes as usersRoute } from './users'
 
-
 const routes: Array<RouteRecordRaw> = [
+  ...authRoute,
   {
     path: '/',
-    redirect: '/tabs/verses'
+    redirect: '/tabs/verses',
+    name: 'home'
   },
   {
     path: '/tabs/',
@@ -29,6 +31,13 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from) => {
+  const authStore = useAuthStore()
+  if (to.name != 'login' && !authStore.isAuthenticated) {
+    return { name: 'login' }
+  }
 })
 
 export default router

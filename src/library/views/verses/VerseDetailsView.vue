@@ -32,7 +32,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBa
 import { defineProps, onMounted, shallowRef } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { Verse } from '../../models/verse'
-import { useVersesStore } from '../../stores/versesStore'
+import { useVersesStore } from '../../stores/useVersesStoreore'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
