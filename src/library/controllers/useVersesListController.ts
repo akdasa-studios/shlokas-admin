@@ -15,7 +15,9 @@ export function useVersesListController() {
   async function sync() {
     const env = process.env.NODE_ENV
     const host = env === 'production' ? 'shlokas.app' : 'localhost'
-    const url = `http://${_auth.login}:${_auth.password}@${host}/db/shlokas`
+    const protocol = env === 'production' ? 'https' : 'http'
+
+    const url = `${protocol}://${_auth.login}:${_auth.password}@${host}/db/shlokas`
     console.log(url)
     await _database.sync(url)
   }
