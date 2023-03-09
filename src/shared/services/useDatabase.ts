@@ -1,7 +1,9 @@
 import PouchDB from 'pouchdb'
 import PouchdbFind from 'pouchdb-find'
+import PouchDBUpsert from 'pouchdb-upsert'
 
 PouchDB.plugin(PouchdbFind)
+PouchDB.plugin(PouchDBUpsert)
 
 export class Database {
   private db: PouchDB.Database
@@ -22,11 +24,20 @@ export class Database {
   }
 
   async get(id: string) {
-    return this.db.get(id)
+    return await this.db.get(id)
   }
 
-  async put(doc: PouchDB.Core.PutDocument<any>) {
-    return this.db.put(doc)
+  // async put(doc: PouchDB.Core.PutDocument<any>) {
+  //   console.log(doc)
+  //   return this.db.put(doc)
+  // }
+
+  async put(doc: any) {
+    console.log(doc)
+    await this.db.upsert(
+      doc._id,
+      () => { return doc as any }
+    )
   }
 
   async sync(remote: string) {

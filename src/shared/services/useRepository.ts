@@ -19,7 +19,12 @@ export function useRepository<T>(
     } }) as T[]
   }
 
+
+  async function get(id: string): Promise<T> {
+    return await database.get(id) as T
+  }
+
   return {
-    find, all
+    find, all, get
   }
 }

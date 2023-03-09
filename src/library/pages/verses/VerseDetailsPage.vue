@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton } from '@ionic/vue'
-import { defineProps, onMounted, shallowRef } from 'vue'
+import { defineProps, onMounted, shallowRef, ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { Verse } from '../../models/verse'
-import { useVersesStore } from '../../stores/useVersesStore'
+import { useVerseDetailsController } from '../../controllers/useVerseDetailsController'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -47,12 +47,13 @@ const props = defineProps<{
 
 const component = shallowRef<any>()
 
+
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const versesStore = useVersesStore()
-const verse = shallowRef()
+const versesController = useVerseDetailsController()
+const verse = ref({})
 
 
 /* -------------------------------------------------------------------------- */
@@ -60,12 +61,14 @@ const verse = shallowRef()
 /* -------------------------------------------------------------------------- */
 
 onMounted(async () => {
-  verse.value = await versesStore.get(props.id)
+  verse.value = await versesController.getVerse(props.id)
+  console.log('verse.value', verse.value)
   // @ts-ignore
   component.value = (await props.component).default
 })
 
 const onVerseChanged = useDebounceFn((changedVerse: Verse) => {
-  versesStore.update(changedVerse)
+  verse.value = changedVerse
+  versesController.saveVerse(changedVerse)
 }, 1000)
 </script>
