@@ -16,12 +16,25 @@
       – {{ synonym.translation }};&nbsp;
     </span>
   </span>
+
+  <ion-modal
+    :initial-breakpoint="0.5"
+    :breakpoints="[0.25, 0.5]"
+    :is-open="isModalOpen"
+    @will-dismiss="onModalClose"
+  >
+    <VerseSynonymEdit
+      :synonym-id="synonymId"
+      :verse="props.verse"
+    />
+  </ion-modal>
 </template>
 
 <script setup lang="ts">
-import { useIonRouter } from '@ionic/vue'
-import { defineProps, defineEmits, reactive, watch, toRaw } from 'vue'
-import { Verse } from '../models/verse'
+import { IonModal } from '@ionic/vue'
+import { defineProps, defineEmits, reactive, watch, toRaw, ref } from 'vue'
+import { Verse } from '../../models/verse'
+import VerseSynonymEdit from './VerseSynonymEdit.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */
@@ -40,16 +53,22 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const router = useIonRouter()
 const synonyms = reactive(props.verse.synonyms)
+const isModalOpen = ref(false)
+const synonymId = ref(0)
 
 
 /* -------------------------------------------------------------------------- */
 /*                                    Watch                                   */
 /* -------------------------------------------------------------------------- */
 
-function onSynonymClick(idx: number) {
-  router.push(`synonyms/${idx}`)
+async function onSynonymClick(idx: number) {
+  isModalOpen.value = true
+  synonymId.value = idx
+}
+
+function onModalClose() {
+  isModalOpen.value = false
 }
 
 watch([synonyms], () => {
@@ -86,10 +105,6 @@ watch([synonyms], () => {
   font-weight: bold;
 }
 
-.wordBox {
-  /* padding-top: 5px; */
-  /* padding-bottom: 5px; */
-}
 .translation {
   font-style: italic;
 }

@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { fabric } from 'fabric'
 import { onMounted , defineProps, defineEmits } from 'vue'
-import { Verse, Synonym } from '../models/verse'
+import { Verse, Synonym } from '../../models/verse'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

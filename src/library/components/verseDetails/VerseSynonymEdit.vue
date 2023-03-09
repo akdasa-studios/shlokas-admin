@@ -1,32 +1,49 @@
 <template>
-  <ion-input
+  <ion-item
     v-for="word, widx in synonym.words"
     :key="widx"
-    v-model="synonym.words[widx]"
-    placeholder="word"
-  />
+  >
+    <ion-label position="stacked">
+      Word
+    </ion-label>
+    <ion-input
+      v-model="synonym.words[widx]"
+    />
+  </ion-item>
 
-  <ion-input
-    v-model="synonym.translation"
-    placeholder="Translation"
-  />
+  <ion-item>
+    <ion-label position="stacked">
+      Translation
+    </ion-label>
+    <ion-input
+      v-model="synonym.translation"
+    />
+  </ion-item>
 
-  <ion-input
-    v-model="synonym.shortTranslation"
-    placeholder="Short translation"
-  />
+  <ion-item>
+    <ion-label position="stacked">
+      Short Translation
+    </ion-label>
+    <ion-input
+      v-model="synonym.shortTranslation"
+    />
+  </ion-item>
 
-  <ion-input
-    v-model="synonym.lineNumber"
-    type="number"
-    placeholder="Line Number"
-  />
+  <ion-item>
+    <ion-label position="stacked">
+      Line Number
+    </ion-label>
+    <ion-input
+      v-model="synonym.lineNumber"
+      type="number"
+    />
+  </ion-item>
 </template>
 
 <script setup lang="ts">
-import { IonInput } from '@ionic/vue'
+import { IonInput, IonLabel, IonItem } from '@ionic/vue'
 import { defineProps, defineEmits, reactive, watch, toRaw } from 'vue'
-import { Synonym, Verse } from '../models/verse'
+import { Synonym, Verse } from '../../models/verse'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */

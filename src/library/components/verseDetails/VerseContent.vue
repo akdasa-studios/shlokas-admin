@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import { IonTextarea } from '@ionic/vue'
-import { defineProps, defineEmits, ref, watch } from 'vue'
-import { Verse } from '../models/verse'
+import { defineProps, ref, defineEmits, watch } from 'vue'
+import { Verse } from '../../models/verse'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */
@@ -26,7 +26,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'change', verse: Verse): void
+  (event: 'change', verse: Verse): void
 }>()
 
 /* -------------------------------------------------------------------------- */
@@ -37,7 +37,7 @@ const text = ref(props.verse.text.join('\n'))
 const translation = ref(props.verse.translation)
 
 /* -------------------------------------------------------------------------- */
-/*                                    Watch                                   */
+/*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
 watch([text, translation], () => {
