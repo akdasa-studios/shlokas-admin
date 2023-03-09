@@ -20,6 +20,7 @@
             v-model="password"
             placeholder="Password"
             class="credentials"
+            type="password"
           />
           <ion-input
             v-model="totp"
