@@ -8,7 +8,7 @@ on:
 env:
   REGISTRY:   ghcr.io
   IMAGE_NAME: ghcr.io/${{ github.repository }}
-  IMAGE_TAG:  ${{ github.run_number }}-beta
+  IMAGE_TAG:  beta-${{ github.run_number }}
 
 
 jobs:
