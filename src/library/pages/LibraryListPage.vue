@@ -51,8 +51,11 @@ const verses = ref<Verse[]>([])
 /* -------------------------------------------------------------------------- */
 
 onMounted(async () => {
-  await versesListController.sync()
-  console.log('synced')
+  try {
+    await versesListController.sync()
+  } catch (err) {
+    console.error('Error syncing verses list.', err)
+  }
   verses.value  = await versesListController.getAllVerses()
 })
 </script>
