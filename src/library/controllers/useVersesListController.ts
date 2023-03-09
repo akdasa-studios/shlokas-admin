@@ -13,7 +13,10 @@ export function useVersesListController() {
   }
 
   async function sync() {
-    const url = `http://${_auth.login}:${_auth.password}@localhost/db/shlokas`
+    const env = process.env.NODE_ENV
+    const host = env === 'production' ? 'shlokas.app' : 'localhost'
+    const url = `http://${_auth.login}:${_auth.password}@${host}/db/shlokas`
+    console.log(url)
     await _database.sync(url)
   }
 
