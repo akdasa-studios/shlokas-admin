@@ -12,8 +12,8 @@ env:
 
 
 jobs:
-  deploy:
-    name: 🚚 Deploy
+  build:
+    name: 🏗️ Build
     runs-on: ubuntu-latest
     environment: Staging
     permissions:
@@ -52,5 +52,6 @@ jobs:
       - name: 🐳 Build and push
         uses: docker/build-push-action@v4
         with:
+          context: .
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }},${{ env.IMAGE_NAME }}:beta
