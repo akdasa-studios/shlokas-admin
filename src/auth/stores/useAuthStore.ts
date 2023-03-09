@@ -23,6 +23,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   return {
     loggedIn,
-    isAuthenticated: _isAuthenticated
+    isAuthenticated: _isAuthenticated,
+    login: _login,
+    password: _password,
   }
 })

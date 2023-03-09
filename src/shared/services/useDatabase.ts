@@ -12,12 +12,6 @@ export class Database {
     this.db = new PouchDB('mydb')
   }
 
-  async allDocs() {
-    const rows = await this.db.find({ selector: { '@type': { '$eq': 'verse' } } })
-    // .allDocs({ include_docs: true })
-    return rows.docs
-  }
-
   async find(query: any) {
     const rows = await this.db.find(query)
     return rows.docs
@@ -26,11 +20,6 @@ export class Database {
   async get(id: string) {
     return await this.db.get(id)
   }
-
-  // async put(doc: PouchDB.Core.PutDocument<any>) {
-  //   console.log(doc)
-  //   return this.db.put(doc)
-  // }
 
   async put(doc: any) {
     console.log(doc)
