@@ -21,6 +21,11 @@
             placeholder="Password"
             class="credentials"
           />
+          <ion-input
+            v-model="totp"
+            placeholder="One Time Password"
+            class="credentials"
+          />
 
           <div
             v-if="showError"
@@ -53,6 +58,7 @@ import { useAuthController } from '../controllers/useAuthController'
 
 const login = ref('')
 const password = ref('')
+const totp = ref('')
 const showError = ref(false)
 const controller = useAuthController(useRouter())
 
@@ -62,7 +68,7 @@ const controller = useAuthController(useRouter())
 /* -------------------------------------------------------------------------- */
 
 async function onLogInClicked() {
-  const isSuccessful = await controller.logIn(login.value, password.value)
+  const isSuccessful = await controller.logIn(login.value, password.value, totp.value)
   showError.value = !isSuccessful
 }
 </script>

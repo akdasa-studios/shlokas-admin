@@ -5,11 +5,11 @@ import { useAuthService } from '../services/useAuthService'
 export class AuthController {
   constructor (private readonly router: Router) {}
 
-  async logIn(login: string, password: string): Promise<boolean> {
+  async logIn(login: string, password: string, totp: string): Promise<boolean> {
     const authService = useAuthService()
     const authStore = useAuthStore()
 
-    const authResult = await authService.logIn({ login, password })
+    const authResult = await authService.logIn({ login, password, totp })
     if (authResult.isSuccessful) {
       authStore.loggedIn(login, password)
       this.router.push({ name: 'home' })
