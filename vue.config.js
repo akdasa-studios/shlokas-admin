@@ -8,5 +8,8 @@ module.exports = {
       .use('i18n')
       .loader('@intlify/vue-i18n-loader')
       .end()
-  }
+  },
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/admin/'
+    : '/'
 }
