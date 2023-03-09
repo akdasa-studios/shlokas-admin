@@ -1,9 +1,14 @@
-name: Deploy
+name: Build
 
 on:
   push:
     branches:
       - main
+
+env:
+  REGISTRY:   ghcr.io
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  IMAGE_TAG:  ${{ github.run_number }}-beta
 
 
 jobs:
@@ -17,6 +22,16 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v2
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 📦 Setup Node
         uses: actions/setup-node@v2
@@ -34,18 +49,8 @@ jobs:
       - name: 🏗️ Build
         run: npm run build
 
-      - name: 🚀 Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.2
+      - name: 🐳 Build and push
+        uses: docker/build-push-action@v4
         with:
-          publish-dir: './dist'
-          production-deploy: true
-          production-branch: master
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: false
-          enable-commit-comment: true
-          overwrites-pull-request-comment: true
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }},${{ env.IMAGE_NAME }}:beta
