@@ -13,10 +13,9 @@ jobs:
   deploy:
     name: 🚚 Deploy
     runs-on: ubuntu-latest
-    environment: Staging
     permissions:
       contents: read
-      packages: read
+      packages: write
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v2
