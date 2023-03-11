@@ -29,42 +29,20 @@
         :duration="0"
       />
 
-      <ion-list>
-        <ion-item-sliding
-          v-for="verse in verses"
-          :key="verse._id"
-        >
-          <ion-item-options>
-            <ion-item-option
-              color="danger"
-              @click="onDeleteClicked(verse._id)"
-            >
-              Delete
-            </ion-item-option>
-          </ion-item-options>
-
-
-          <ion-item>
-            <ion-label
-              class="ion-text-wrap"
-              :router-link="'/tabs/verses/' + verse._id"
-              router-direction="forward"
-            >
-              <h2>{{ verse.number }}</h2>
-              <p>{{ verse.translation }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-item-sliding>
-      </ion-list>
+      <VersesList
+        :verses="verses"
+        @remove="onVerseRemove"
+      />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonList, IonItem, IonLoading, IonButton, IonButtons, onIonViewWillEnter, IonItemOption, IonItemOptions, IonItemSliding } from '@ionic/vue'
+import { IonButton, IonButtons, IonContent, IonHeader, IonLoading, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from '@ionic/vue'
 import { onMounted, ref } from 'vue'
-import { Verse } from '@/library/models/verse'
 import { useVersesListController } from '@/library/controllers/useVersesListController'
+import { Verse } from '@/library/models/verse'
+import VersesList from '@/library/components/list/VersesList.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -81,7 +59,7 @@ const isLoading = ref(false)
 onMounted(async () => { await sync() })
 onIonViewWillEnter(async () => { await refresh() })
 
-async function onDeleteClicked(id: string) {
+async function onVerseRemove(id: string) {
   await versesListController.remove(id)
   await refresh()
 }
