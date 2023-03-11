@@ -53,7 +53,10 @@
         />
       </ion-item>
 
-      <VerseSynonymParser @change="v => synonyms = v" />
+      <VerseSynonymParser
+        :lines="text.split('\n')"
+        @change="v => synonyms = v"
+      />
     </ion-content>
   </ion-page>
 </template>

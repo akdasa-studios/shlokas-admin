@@ -14,17 +14,27 @@
       Unable to parse
     </ion-note>
   </ion-item>
+
+  <VerseSynonymParserPreview
+    :lines="props.lines"
+    :synonyms="synonyms"
+  />
 </template>
 
 <script setup lang="ts">
 import { IonItem, IonLabel, IonTextarea, IonNote } from '@ionic/vue'
-import { defineEmits, ref, watch } from 'vue'
+import { defineEmits, ref, watch, defineProps } from 'vue'
 import { useSynonymsParser } from '@/library/controllers/useSynonymsParser'
 import { Synonym } from '../../models/verse'
+import VerseSynonymParserPreview from './VerseSynonymParserPreview.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */
 /* -------------------------------------------------------------------------- */
+
+const props = defineProps<{
+  lines: string[],
+}>()
 
 const emit = defineEmits<{
   (e: 'change', synonyms: Synonym[]): void
@@ -36,6 +46,7 @@ const emit = defineEmits<{
 
 const parser = useSynonymsParser()
 const text = ref('')
+const synonyms = ref<Synonym[]>([])
 const synonymsParsedCount = ref(0)
 const hasErrors = ref(false)
 
@@ -44,7 +55,8 @@ const hasErrors = ref(false)
 /* -------------------------------------------------------------------------- */
 
 watch(text, () => {
-  const result = parser.parse(text.value)
+  const result = parser.parse(text.value, props.lines)
+  synonyms.value = result.sysnonyms
   synonymsParsedCount.value = result.sysnonyms.length
   hasErrors.value = result.hasError
   emit('change', result.sysnonyms)
@@ -53,4 +65,12 @@ watch(text, () => {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+.lineSplitPreview {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  text-align: center;
+
+}
+</style>
