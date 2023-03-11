@@ -13,4 +13,5 @@ export interface Verse {
   text: string[];
   translation: string;
   synonyms: Synonym[];
+  language: string;
 }

@@ -19,9 +19,7 @@ export function useAuthService() {
     // validate TOTP
     const response = await fetch(env.getTotpUrl(), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code: credentials.totp })
     })
     const data = await response.json()

@@ -32,6 +32,11 @@ export class Database {
   async sync(remote: string) {
     return this.db.sync(remote)
   }
+
+  async remove(id: string) {
+    const doc = await this.db.get(id, { latest: true })
+    await this.db.remove(doc)
+  }
 }
 
 const database = new Database()

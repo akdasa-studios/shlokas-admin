@@ -7,7 +7,12 @@ export function useEnvironment() {
     return `${protocol}://${host}/totp/validate`
   }
 
+  function getContentUrl() {
+    return `${protocol}://${host}/content`
+  }
+
   return {
-    getTotpUrl
+    getTotpUrl,
+    getContentUrl
   }
 }

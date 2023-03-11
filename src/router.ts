@@ -35,10 +35,10 @@ const router = createRouter({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 router.beforeEach((to, from) => {
-  const authStore = useAuthStore()
-  if (to.name != 'login' && !authStore.isAuthenticated) {
-    return { name: 'login' }
-  }
+  // const authStore = useAuthStore()
+  // if (to.name != 'login' && !authStore.isAuthenticated) {
+  //   return { name: 'login' }
+  // }
 })
 
 export default router

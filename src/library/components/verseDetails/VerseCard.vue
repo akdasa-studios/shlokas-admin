@@ -1,12 +1,14 @@
 <template>
-  <div id="content">
-    <canvas id="root" />
+  <div id="root">
+    <canvas id="canvas" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { fabric } from 'fabric'
 import { onMounted , defineProps, defineEmits } from 'vue'
+import { useFileUploader } from '@/shared/services/useFileUploader'
+import { useEnvironment } from '@/shared/services/useEnvironment'
 import { Verse, Synonym } from '../../models/verse'
 
 /* -------------------------------------------------------------------------- */
@@ -25,6 +27,8 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
+const env = useEnvironment()
+const uploader = useFileUploader(env.getContentUrl())
 let canvas: any
 
 /* -------------------------------------------------------------------------- */
@@ -32,14 +36,13 @@ let canvas: any
 /* -------------------------------------------------------------------------- */
 
 onMounted(() => {
-  canvas = new fabric.Canvas('root')
-  // canvas.renderOnAddRemove = true
+  canvas = new fabric.Canvas('canvas')
   canvas.on('object:modified', () => { save() })
   add(props.verse.text, props.verse.synonyms)
 })
 
 
-const wordToElemMap:any = {}
+const wordToElemMap = new Map<number, fabric.Text>()
 const zoom = .45
 
 function add(lines: string[], words: Synonym[]) {
@@ -94,37 +97,33 @@ function add(lines: string[], words: Synonym[]) {
       hasControls: false,
       lockMovementY: true,
       fill: 'gray'
-      // class: 'text'
     })
-    wordToElemMap[alwn++] = elem
+    wordToElemMap.set(alwn++, elem)
     canvas.add(elem)
   }
   canvas.renderAll()
-  // canvas.renderCanvas()
 }
 
 function save() {
-  const synonyms = { ...props.verse.synonyms }
-  for (const [key, elem] of Object.entries(wordToElemMap)) {
-    synonyms[key].positionX = elem.left / canvas.width
+  const synonyms: Synonym[] = { ...props.verse.synonyms }
+  for (const [key, elem] of wordToElemMap.entries()) {
+    synonyms[key].positionX = (elem.left || 0) / canvas.width
   }
 
   emit('change', {
     ...props.verse,
     synonyms: Object.values(synonyms)
   })
+
+  const data = canvas.toSVG()
+  const fileName = 'verse-card-' + props.verse._id + '.svg'
+  uploader.upload(fileName, data, 'image/svg+xml')
 }
 </script>
 
 <style scoped>
-#content {
+#root {
   display: flex;
-  align-items: center;
-  align-self: center;
   justify-content: center;
-}
-
-.text {
-  color: red;
 }
 </style>

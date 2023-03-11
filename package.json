@@ -39,7 +39,8 @@
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6",
     "pouchdb-find": "^8.0.1",
-    "pouchdb-upsert": "^2.2.0"
+    "pouchdb-upsert": "^2.2.0",
+    "uuid-by-string": "^4.0.0"
   },
   "devDependencies": {
     "@capacitor/cli": "4.6.3",
