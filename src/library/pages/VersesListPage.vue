@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-buttons slot="primary">
           <ion-button
-            router-link="/tabs/verses/add"
+            router-link="/tabs/verses/create"
             router-direction="forward"
           >
             Add
@@ -76,5 +76,6 @@ async function sync() {
   } catch (err) {
     console.error('Error syncing verses list.', err)
   }
+  await refresh()
 }
 </script>

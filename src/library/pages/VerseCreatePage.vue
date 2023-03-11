@@ -52,6 +52,8 @@
           :auto-grow="true"
         />
       </ion-item>
+
+      <VerseSynonymParser @change="v => synonyms = v" />
     </ion-content>
   </ion-page>
 </template>
@@ -60,6 +62,8 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonButton, IonButtons, IonTextarea, IonInput, IonBackButton, useIonRouter } from '@ionic/vue'
 import { ref } from 'vue'
 import { useVersesListController } from '@/library/controllers/useVersesListController'
+import VerseSynonymParser from '@/library/components/verseDetails/VerseSynonymParser.vue'
+import { Synonym } from '../models/verse'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -71,6 +75,7 @@ const number = ref('')
 const text = ref('')
 const translation = ref('')
 const language = ref('')
+const synonyms = ref<Synonym[]>([])
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
@@ -81,7 +86,8 @@ async function onSaveClicked() {
     language: language.value,
     number: number.value,
     text: text.value.split('\n'),
-    translation: translation.value
+    translation: translation.value,
+    synonyms: synonyms.value
   })
   router.back()
 }

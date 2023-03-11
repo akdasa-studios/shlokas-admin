@@ -13,7 +13,7 @@ export function useVersesListController() {
     return await _verses.all()
   }
 
-  async function addVerse(data: Pick<Verse, 'number' | 'text' | 'translation' | 'language'>) {
+  async function addVerse(data: Pick<Verse, 'number' | 'text' | 'translation' | 'language'|'synonyms'>) {
     const id = getUuid(data.language + data.number.toUpperCase(), 3)
     await _database.put({
       ...data,
