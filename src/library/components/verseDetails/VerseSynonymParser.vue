@@ -61,16 +61,4 @@ watch(text, () => {
   hasErrors.value = result.hasError
   emit('change', result.sysnonyms)
 })
-
 </script>
-
-
-<style scoped>
-.lineSplitPreview {
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  text-align: center;
-
-}
-</style>
