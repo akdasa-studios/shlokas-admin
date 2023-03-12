@@ -8,12 +8,7 @@
           </ion-button>
         </ion-buttons>
         <ion-buttons slot="secondary">
-          <ion-button
-            color="medium"
-            @click="onCancelClicked"
-          >
-            Cancel
-          </ion-button>
+          <ion-back-button />
         </ion-buttons>
         <ion-title>
           {{ props.title }}
@@ -23,8 +18,8 @@
 
     <ion-content class="ion-padding">
       <component
-        :is="props.component"
-        :verse="props.verse"
+        :is="component"
+        :verse="verse"
         @change="onVerseChanged"
       />
     </ion-content>
@@ -32,8 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonToolbar, IonButtons, IonTitle, IonHeader, IonContent, IonButton, modalController } from '@ionic/vue'
-import { defineProps, ref } from 'vue'
+import { IonPage, IonToolbar, IonButtons, IonTitle, IonHeader, IonContent, IonButton, IonBackButton, useIonRouter } from '@ionic/vue'
+import { defineProps, onMounted, ref, shallowRef } from 'vue'
+import { useVerseDetailsController } from '../controllers/useVerseDetailsController'
 import { Verse } from '../models/verse'
 
 /* -------------------------------------------------------------------------- */
@@ -41,7 +37,7 @@ import { Verse } from '../models/verse'
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  verse: Verse,
+  id: string
   component: object,
   title: string
 }>()
@@ -50,21 +46,27 @@ const props = defineProps<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const changedVerse = ref({})
+const versesController = useVerseDetailsController()
+const router = useIonRouter()
+const verse = ref<Verse>({} as Verse)
+const component = shallowRef()
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-function onVerseChanged(verse: Verse) {
-  changedVerse.value = verse
+onMounted(async () => {
+  verse.value = await versesController.getVerse(props.id)
+  // @ts-ignore
+  component.value = (await props.component).default
+})
+
+function onVerseChanged(changedVerse: Verse) {
+  verse.value = changedVerse
 }
 
 function onSaveClicked() {
-  return modalController.dismiss(changedVerse.value, 'confirm')
-}
-
-function onCancelClicked() {
-  return modalController.dismiss(null, 'cancel')
+  versesController.saveVerse(verse.value)
+  router.back()
 }
 </script>

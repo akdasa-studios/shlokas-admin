@@ -47,16 +47,18 @@ export function useWordsPacker() {
     }
 
     for (const word of verse.synonyms) {
+      if (word.lineNumber === undefined) { continue }
+
       const wordsOfLine = verse.synonyms.filter(x => x.lineNumber === word.lineNumber)
       const wordsCount = wordsOfLine.length
       const wordNum = wordsOfLine.findIndex(x => x===word)
 
       const txt = word.shortTranslation || word.translation
       const elem = new fabric.Text(txt, {
-        top: canvasHeight * ((word.lineNumber || 0) + 1) - options.fontSize/2,
+        top: (canvasHeight * (word.lineNumber+1)) - (options.fontSize / 2),
         left: word.positionX ? word.positionX * canvasWidth : (canvasWidth / (wordsCount+1)) * (wordNum+1),
         originX: 'center',
-        originY: 'center',
+        originY: 'top',
         fontSize: options.fontSize/2,
         lineHeight: .75,
         fontFamily: options.fontFamily,
