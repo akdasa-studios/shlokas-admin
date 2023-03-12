@@ -19,42 +19,13 @@
     </ion-header>
 
     <ion-content>
-      <ion-item>
-        <ion-label position="floating">
-          Language
-        </ion-label>
-        <ion-input v-model="language" />
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">
-          Number
-        </ion-label>
-        <ion-input v-model="number" />
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">
-          Text
-        </ion-label>
-        <ion-textarea
-          v-model="text"
-          :auto-grow="true"
-        />
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">
-          Translation
-        </ion-label>
-        <ion-textarea
-          v-model="translation"
-          :auto-grow="true"
-        />
-      </ion-item>
+      <VerseContent
+        :verse="verseContent"
+        @change="v => verseContent = v"
+      />
 
       <VerseSynonymParser
-        :lines="text.split('\n')"
+        :lines="verseContent.text"
         @change="v => synonyms = v"
       />
     </ion-content>
@@ -62,8 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonButton, IonButtons, IonTextarea, IonInput, IonBackButton, useIonRouter } from '@ionic/vue'
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter } from '@ionic/vue'
 import { ref } from 'vue'
+import VerseContent from '@/library/components/verseDetails/VerseContent.vue'
 import { useVersesListController } from '@/library/controllers/useVersesListController'
 import VerseSynonymParser from '@/library/components/verseDetails/VerseSynonymParser.vue'
 import { Synonym } from '../models/verse'
@@ -74,10 +46,12 @@ import { Synonym } from '../models/verse'
 
 const versesListController = useVersesListController()
 const router = useIonRouter()
-const number = ref('')
-const text = ref('')
-const translation = ref('')
-const language = ref('')
+const verseContent = ref({
+  number: '',
+  text: [''],
+  translation: '',
+  language: ''
+})
 const synonyms = ref<Synonym[]>([])
 
 /* -------------------------------------------------------------------------- */
@@ -86,10 +60,7 @@ const synonyms = ref<Synonym[]>([])
 
 async function onSaveClicked() {
   await versesListController.addVerse({
-    language: language.value,
-    number: number.value,
-    text: text.value.split('\n'),
-    translation: translation.value,
+    ...verseContent.value,
     synonyms: synonyms.value
   })
   router.back()

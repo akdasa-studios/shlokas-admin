@@ -7,7 +7,7 @@
             Save
           </ion-button>
         </ion-buttons>
-        <ion-buttons slot="secondary">
+        <ion-buttons slot="start">
           <ion-back-button />
         </ion-buttons>
         <ion-title>
@@ -20,6 +20,7 @@
       <component
         :is="component"
         :verse="verse"
+        v-bind="props.componentProps"
         @change="onVerseChanged"
       />
     </ion-content>
@@ -28,7 +29,7 @@
 
 <script setup lang="ts">
 import { IonPage, IonToolbar, IonButtons, IonTitle, IonHeader, IonContent, IonButton, IonBackButton, useIonRouter } from '@ionic/vue'
-import { defineProps, onMounted, ref, shallowRef } from 'vue'
+import { defineProps, onMounted, ref, shallowRef, withDefaults } from 'vue'
 import { useVerseDetailsController } from '../controllers/useVerseDetailsController'
 import { Verse } from '../models/verse'
 
@@ -36,11 +37,14 @@ import { Verse } from '../models/verse'
 /*                                  Inerface                                  */
 /* -------------------------------------------------------------------------- */
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   id: string
   component: object,
+  componentProps?: object,
   title: string
-}>()
+}>(), {
+  componentProps: () => ({}),
+})
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */

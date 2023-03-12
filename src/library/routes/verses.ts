@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 
 const VerseDetailsPage = () => import('../pages/VerseDetailsPage.vue')
 const VerseCreatePage = () => import('../pages/VerseCreatePage.vue')
-const VerseEditModalContainer = () => import('../pages/VerseEditModalContainer.vue')
+const VerseEditModalContainer = () => import('../pages/VerseEditPageContainer.vue')
 
 
 export const routes: Array<RouteRecordRaw> = [
@@ -27,6 +27,10 @@ export const routes: Array<RouteRecordRaw> = [
     props: route => ({
       id: route.params.id,
       component: import('../components/verseDetails/VerseContent.vue'),
+      componentProps: {
+        disableLanguage: true,
+        disableNumber: true,
+      },
       title: 'Content'
     }),
   },

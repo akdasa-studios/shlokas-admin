@@ -1,28 +1,36 @@
 <template>
-  <span
+  <ion-item
     v-for="synonym,idx in synonyms"
     :key="idx"
-    class="wordBox"
-    :class="'line-' + synonym.lineNumber || 0"
     @click="onSynonymClick(idx)"
   >
-    <span v-if="synonym.lineNumber">
-      {{ synonym.lineNumber }}:
-    </span>
-    <span class="word">
-      {{ synonym.words.join(' ') }}
-    </span>
-    <span class="translation">
-      – {{ synonym.translation }};&nbsp;
-    </span>
-  </span>
+    <ion-label>
+      <h2>{{ synonym.words.join(' ') }}</h2>
+      <p>{{ synonym.translation }}</p>
+    </ion-label>
+  </ion-item>
+
 
   <ion-modal
-    :initial-breakpoint="0.5"
-    :breakpoints="[0.25, 0.5]"
+    :initial-breakpoint="0.25"
+    :breakpoints="[0.25, 0.5, 0.75]"
+    :backdrop-breakpoint="0.5"
     :is-open="isModalOpen"
-    @will-dismiss="onModalClose"
+    @will-dismiss="isModalOpen = false"
   >
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="primary">
+          <ion-button @click="isModalOpen = false">
+            Close
+          </ion-button>
+        </ion-buttons>
+        <ion-title>
+          Edit Synonym
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
     <VerseSynonymEdit
       :synonym-id="synonymId"
       :verse="props.verse"
@@ -31,8 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { IonModal } from '@ionic/vue'
-import { defineProps, defineEmits, reactive, watch, toRaw, ref } from 'vue'
+import { IonModal, IonItem, IonLabel, IonToolbar, IonHeader, IonTitle, IonButtons, IonButton } from '@ionic/vue'
+import { defineProps, defineEmits, watch, toRaw, ref } from 'vue'
 import { Verse } from '../../models/verse'
 import VerseSynonymEdit from './VerseSynonymEdit.vue'
 
@@ -53,7 +61,7 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const synonyms = reactive(props.verse.synonyms)
+const synonyms = ref(props.verse.synonyms)
 const isModalOpen = ref(false)
 const synonymId = ref(0)
 
@@ -67,64 +75,10 @@ async function onSynonymClick(idx: number) {
   synonymId.value = idx
 }
 
-function onModalClose() {
-  isModalOpen.value = false
-}
-
-watch([synonyms], () => {
-  let currentLineNumber = undefined
-  let linesToChange = []
-
-  for (const line of synonyms) {
-
-    if (line.lineNumber !== undefined) {
-      if (currentLineNumber !== undefined) {
-        for (const line of linesToChange) {
-          line.lineNumber = currentLineNumber
-        }
-        linesToChange = []
-      }
-      currentLineNumber = line.lineNumber
-    }
-
-    if (currentLineNumber !== undefined) {
-      linesToChange.push(line)
-    }
-  }
-
+watch(synonyms, () => {
   emit('change', {
     ...props.verse,
-    synonyms: toRaw(synonyms)
+    synonyms: toRaw(synonyms.value)
   })
 }, { deep: true })
 </script>
-
-
-<style scoped>
-.word {
-  font-weight: bold;
-}
-
-.translation {
-  font-style: italic;
-}
-.line-0 {
-  background-color: lightblue;
-}
-
-.line-1 {
-  background-color: lightpink;
-}
-
-.line-2 {
-  background-color: lightgreen;
-}
-
-.line-3 {
-  background-color: lightyellow;
-}
-
-.line-4 {
-  background-color: lightsalmon;
-}
-</style>

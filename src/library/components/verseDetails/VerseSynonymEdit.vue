@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { IonInput, IonLabel, IonItem } from '@ionic/vue'
-import { defineProps, defineEmits, reactive, watch, toRaw } from 'vue'
+import { defineProps, defineEmits, toRef, watch, toRaw, ref } from 'vue'
 import { Synonym, Verse } from '../../models/verse'
 
 /* -------------------------------------------------------------------------- */
@@ -63,16 +63,21 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const synonym = reactive<Synonym>(props.verse.synonyms[props.synonymId])
+const synonymId = toRef(props, 'synonymId')
+const synonym = ref<Synonym>(props.verse.synonyms[props.synonymId])
 
 
 /* -------------------------------------------------------------------------- */
 /*                                    Watch                                   */
 /* -------------------------------------------------------------------------- */
 
-watch([synonym], () => {
+watch(synonymId, (id) => {
+  synonym.value = props.verse.synonyms[id]
+})
+
+watch(synonym, () => {
   const copy = {...props.verse}
-  copy.synonyms[props.synonymId] = toRaw(synonym)
+  copy.synonyms[props.synonymId] = toRaw(synonym.value)
   // TODO:
   // @ts-ignore
   copy.synonyms[props.synonymId].lineNumber = parseInt(copy.synonyms[props.synonymId].lineNumber as string)

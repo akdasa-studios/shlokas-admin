@@ -1,12 +1,15 @@
 <template>
   <!-- Synonyms parser -->
-  <ion-item :class="{ 'ion-invalid': hasErrors }">
-    <ion-label position="floating">
+  <ion-item
+    :class="{ 'ion-invalid': synonymsIsInvalid }"
+  >
+    <ion-label position="stacked">
       Synonyms
     </ion-label>
     <ion-textarea
       v-model="text"
       :auto-grow="true"
+      placeholder="dhṛtarāṣṭraḥ uvāca — King Dhṛtarāṣṭra said;"
     />
     <ion-note slot="helper">
       Parsed {{ synonymsParsedCount }} words
@@ -17,8 +20,10 @@
   </ion-item>
 
   <!-- Line numbers parser -->
-  <ion-item :class="{ 'ion-invalid': lineNumberDoNotMatch }">
-    <ion-label position="floating">
+  <ion-item
+    :class="{ 'ion-invalid': lineNumbersIsInvalid }"
+  >
+    <ion-label position="stacked">
       Line Numbers
     </ion-label>
     <div class="one-line">
@@ -28,15 +33,15 @@
       />
       <div class="side-verse">
         <div
-          v-for="l in lines"
-          :key="l"
+          v-for="line in lines"
+          :key="line"
         >
-          {{ l }}
+          {{ line }}
         </div>
       </div>
     </div>
     <ion-note slot="error">
-      Line number do not match
+      Line numbers do not match
     </ion-note>
     <ion-note slot="helper">
       Edit text to change line numbers
@@ -71,8 +76,8 @@ const text = ref('')
 const parsedText = ref('')
 const synonyms = ref<Synonym[]>([])
 const synonymsParsedCount = ref(0)
-const hasErrors = ref(false)
-const lineNumberDoNotMatch = computed(() => props.lines.length != parsedText.value.split('\n').length)
+const synonymsIsInvalid = ref(false)
+const lineNumbersIsInvalid = computed(() => props.lines.length != parsedText.value.split('\n').length)
 
 /* -------------------------------------------------------------------------- */
 /*                                    Wathc                                   */
@@ -82,7 +87,7 @@ watch(text, () => {
   const result = parser.parse(text.value, props.lines)
   synonyms.value = result.sysnonyms
   synonymsParsedCount.value = result.sysnonyms.length
-  hasErrors.value = result.hasError
+  synonymsIsInvalid.value = result.hasError
 
 
   const parsedLines: string[] = []
@@ -92,8 +97,6 @@ watch(text, () => {
     parsedLines[s.lineNumber || 0] += s.words.join(' ') + ' '
   }
   parsedText.value = parsedLines.join('\n')
-
-
   emit('change', result.sysnonyms)
 })
 
@@ -108,7 +111,6 @@ watch(parsedText, () => {
 .one-line {
   display: flex;
   flex-direction: row;
-  /* align-items: center; */
   align-items: flex-start;
   flex-basis: 50%;
 }

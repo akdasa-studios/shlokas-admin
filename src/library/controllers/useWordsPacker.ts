@@ -28,7 +28,7 @@ export function useWordsPacker() {
         hasControls: false,
         lockMovementX: true,
         lockMovementY: true,
-        // shadow: new fabric.Shadow('2px 2px 10px rgba(0,0,0,0.2)')
+        shadow: new fabric.Shadow('2px 2px 10px rgba(0,0,0,0.2)')
       })
 
       canvasWidth = Math.max(text.width || 0, canvasWidth)
