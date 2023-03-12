@@ -23,7 +23,11 @@ export function useSynonymsParser() {
         const synonyms = sentence.split(secondLevelSeparators)
         const words =  (synonyms[0] || '').trim()
         const translation = (synonyms[1] || '').trim()
-        const lineNumber = Math.max(lastLineNumber, findLineNumber(words, lines))
+        let lineNumber = lastLineNumber
+
+        if (words.length > 3) {
+          lineNumber = Math.max(lastLineNumber, findLineNumber(words, lines))
+        }
 
         lastLineNumber = lineNumber
         result.push({
@@ -46,6 +50,23 @@ export function useSynonymsParser() {
     }
   }
 
+  function adjustLineNumbers(lines: string[], synonyms: Synonym[]) {
+    let lineIdx = 0
+    let synonymIdx = 0
+
+    while (lineIdx < lines.length && synonymIdx < synonyms.length) {
+      const line    = lines[lineIdx]
+      const synonym = synonyms[synonymIdx]
+
+      if (line.includes(synonym.words.join(' '))) {
+        synonym.lineNumber = lineIdx
+        synonymIdx++
+      } else {
+        lineIdx++
+      }
+    }
+  }
+
   function findLineNumber(words: string, lines: string[]) {
     const values = lines.map(x => scores(x, words))
     return values.indexOf(Math.min(...values))
@@ -57,5 +78,5 @@ export function useSynonymsParser() {
     return Math.min(...distances)
 }
 
-  return { parse }
+  return { parse, adjustLineNumbers }
 }
