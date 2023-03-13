@@ -1,5 +1,14 @@
-import { routes } from './routes/auth'
+// routes:
+export * from './routes/auth'
 
-export {
-  routes
-}
+// controllers:
+export * from './controllers/useAuthController'
+
+// stores:
+export * from './stores/useAuthStore'
+
+// pages:
+export { default as LoginPage } from './pages/LogInPage.vue'
+
+// services:
+export * from './services/useAuthService'

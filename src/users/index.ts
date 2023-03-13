@@ -1,5 +1,5 @@
-import { routes } from './routes/users'
+// routes:
+export * from './routes/users'
 
-export {
-  routes
-}
+// pages:
+export { default as UsersListPage } from './pages/UsersListPage.vue'

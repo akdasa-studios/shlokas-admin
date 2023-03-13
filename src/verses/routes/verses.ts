@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from 'vue-router'
 
-const VerseDetailsPage = () => import('../pages/VerseDetailsPage.vue')
-const VerseCreatePage = () => import('../pages/VerseCreatePage.vue')
-const VerseEditModalContainer = () => import('../pages/VerseEditPageContainer.vue')
+const VerseDetailsPage = () => import('../pages/VersesDetailsPage.vue')
+const VerseCreatePage = () => import('../pages/VersesCreatePage.vue')
+const VerseEditModalContainer = () => import('../pages/VersesEditPageContainer.vue')
 
 
 export const routes: Array<RouteRecordRaw> = [
@@ -50,15 +50,6 @@ export const routes: Array<RouteRecordRaw> = [
       id: route.params.id,
       component: import('../components/verseDetails/VerseCard.vue'),
       title: 'Content'
-    }),
-  },
-  {
-    path: 'verses/:id/audio',
-    component: VerseEditModalContainer,
-    props: route => ({
-      id: route.params.id,
-      component: import('../components/verseDetails/VerseAudio.vue'),
-      title: 'Audio'
     }),
   },
 ]

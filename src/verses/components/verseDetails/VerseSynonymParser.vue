@@ -52,8 +52,7 @@
 <script setup lang="ts">
 import { IonItem, IonLabel, IonTextarea, IonNote } from '@ionic/vue'
 import { defineEmits, ref, watch, defineProps, computed } from 'vue'
-import { useSynonymsParser } from '@/library/controllers/useSynonymsParser'
-import { Synonym } from '../../models/verse'
+import { Synonym, useSynonymsParser } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */

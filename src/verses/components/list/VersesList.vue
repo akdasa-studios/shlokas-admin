@@ -1,6 +1,6 @@
 <template>
   <ion-list>
-    <VerseListItem
+    <VersesListItem
       v-for="verse in props.verses"
       :key="verse._id"
       :verse="verse"
@@ -12,8 +12,7 @@
 <script setup lang="ts">
 import { IonList } from '@ionic/vue'
 import { defineProps, defineEmits } from 'vue'
-import { Verse } from '@/library/models/verse'
-import VerseListItem from './VersesListItem.vue'
+import { Verse, VersesListItem } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

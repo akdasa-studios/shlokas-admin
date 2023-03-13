@@ -1,12 +1,11 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import { RouteRecordRaw } from 'vue-router'
-import TabsView from './shared/views/TabsView.vue'
-import { useAuthStore } from './auth/stores/useAuthStore'
+import { routes as libraryRoute } from '@/verses'
+import { TabsPage } from '@/shared'
 
-import { routes as authRoute } from './auth'
-import { routes as libraryRoute } from './library'
+import { useAuthStore, routes as authRoute } from '@/auth'
+import { routes as declamationsRoute } from '@/declamations'
 import { routes as usersRoute } from './users'
-import { routes as declamationsRoute } from './declamations'
 
 const routes: Array<RouteRecordRaw> = [
   ...authRoute,
@@ -17,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/tabs/',
-    component: TabsView,
+    component: TabsPage,
     children: [
       {
         path: '',

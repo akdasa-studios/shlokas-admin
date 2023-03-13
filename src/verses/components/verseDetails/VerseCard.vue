@@ -16,8 +16,7 @@ import { onMounted , defineProps, defineEmits, ref, watch } from 'vue'
 import { IonTextarea, IonLabel, IonItem } from '@ionic/vue'
 import { useFileUploader } from '@/shared/services/useFileUploader'
 import { useEnvironment } from '@/shared/services/useEnvironment'
-import { useWordsPacker } from '@/library/controllers/useWordsPacker'
-import { Verse, Synonym } from '../../models/verse'
+import { useWordsPacker, Verse, Synonym } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

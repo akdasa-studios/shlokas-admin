@@ -35,10 +35,7 @@
 <script setup lang="ts">
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter } from '@ionic/vue'
 import { ref } from 'vue'
-import VerseContent from '@/library/components/verseDetails/VerseContent.vue'
-import { useVersesListController } from '@/library/controllers/useVersesListController'
-import VerseSynonymParser from '@/library/components/verseDetails/VerseSynonymParser.vue'
-import { Synonym } from '../models/verse'
+import { VerseContent, Synonym, useVersesListController, VerseSynonymParser } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */

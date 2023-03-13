@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/vue'
 import { defineProps, defineEmits } from 'vue'
-import { Verse } from '@/library/models/verse'
+import { Verse } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

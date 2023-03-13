@@ -40,9 +40,7 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonLoading, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from '@ionic/vue'
 import { onMounted, ref } from 'vue'
-import { useVersesListController } from '@/library/controllers/useVersesListController'
-import { Verse } from '@/library/models/verse'
-import VersesList from '@/library/components/list/VersesList.vue'
+import { useVersesListController, Verse, VersesList } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
