@@ -52,4 +52,13 @@ export const routes: Array<RouteRecordRaw> = [
       title: 'Content'
     }),
   },
+  {
+    path: 'verses/:id/audio',
+    component: VerseEditModalContainer,
+    props: route => ({
+      id: route.params.id,
+      component: import('../components/verseDetails/VerseAudio.vue'),
+      title: 'Audio'
+    }),
+  },
 ]

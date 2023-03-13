@@ -51,7 +51,8 @@ const verse = ref<Verse>({} as Verse)
 const pages = [
   { title: 'Content', url: 'content' },
   { title: 'Synonyms', url: 'synonyms' },
-  { title: 'Card', url: 'card' }
+  { title: 'Card', url: 'card' },
+  { title: 'Audio', url: 'audio' },
 ]
 
 function getUrl(url: string): string {

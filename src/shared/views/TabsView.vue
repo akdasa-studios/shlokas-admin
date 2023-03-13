@@ -15,7 +15,18 @@
         </ion-tab-button>
 
         <ion-tab-button
-          tab="tab1"
+          tab="declamations"
+          href="/tabs/declamations"
+        >
+          <ion-icon
+            aria-hidden="true"
+            :icon="musicalNotesOutline"
+          />
+          <ion-label>Declamations</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button
+          tab="users"
           href="/tabs/users"
         >
           <ion-icon
@@ -31,5 +42,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue'
-import { libraryOutline, peopleOutline } from 'ionicons/icons'
+import { libraryOutline, peopleOutline, musicalNotesOutline } from 'ionicons/icons'
 </script>

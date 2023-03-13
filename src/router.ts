@@ -6,6 +6,7 @@ import { useAuthStore } from './auth/stores/useAuthStore'
 import { routes as authRoute } from './auth'
 import { routes as libraryRoute } from './library'
 import { routes as usersRoute } from './users'
+import { routes as declamationsRoute } from './declamations'
 
 const routes: Array<RouteRecordRaw> = [
   ...authRoute,
@@ -23,7 +24,8 @@ const routes: Array<RouteRecordRaw> = [
         redirect: '/tabs/verses'
       },
       ...libraryRoute,
-      ...usersRoute
+      ...usersRoute,
+      ...declamationsRoute
     ],
   },
 ]
