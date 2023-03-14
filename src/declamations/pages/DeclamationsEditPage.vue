@@ -20,7 +20,10 @@
 
     <ion-content>
       <DeclamationEditForm
+        v-if="declamation._id"
         v-model="declamation"
+        :disable-verse-reference="true"
+        :disable-theme="true"
       />
     </ion-content>
   </ion-page>
@@ -28,25 +31,41 @@
 
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
-import { ref } from 'vue'
+import { ref, defineProps, onMounted } from 'vue'
 import { DeclamationEditForm, Declamation, EmptyDeclamation, useDeclamationsRepository } from '@/declamations'
+
+/* -------------------------------------------------------------------------- */
+/*                                  Interface                                 */
+/* -------------------------------------------------------------------------- */
+
+const props = defineProps<{
+  id: string
+}>()
+
+/* -------------------------------------------------------------------------- */
+/*                                   Lifehooks                                */
+/* -------------------------------------------------------------------------- */
+
+onMounted(() => onOpened())
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
+const declamation = ref<Declamation>(EmptyDeclamation())
 const repo = useDeclamationsRepository()
 const router = useIonRouter()
 
 /* -------------------------------------------------------------------------- */
-/*                                    State                                   */
+/*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
-
-const declamation = ref<Declamation>(EmptyDeclamation())
 
 function onSaveClicked() {
   repo.saveDeclamation(declamation.value)
   router.back()
 }
 
+async function onOpened() {
+  declamation.value = await repo.getDeclamation(props.id)
+}
 </script>

@@ -1,11 +1,13 @@
 <template>
   <!-- Verse Number -->
-  <ion-item>
+  <ion-item
+    :disabled="disableVerseReference"
+  >
     <ion-label position="stacked">
-      Verse Number
+      Verse Reference
     </ion-label>
     <ion-input
-      v-model="verseNumber"
+      v-model="verseReference"
       placeholder="BG 1.1"
     />
     <ion-note slot="helper">
@@ -14,7 +16,9 @@
   </ion-item>
 
   <!-- Verse Number -->
-  <ion-item>
+  <ion-item
+    :disabled="disableTheme"
+  >
     <ion-label position="stacked">
       Theme
     </ion-label>
@@ -30,184 +34,150 @@
   <!-- File picker -->
   <ion-item
     :disabled="isFilePickerDisabled"
-    @click="file.click()"
+    @click="fileInputRef.click()"
   >
     <ion-label>File</ion-label>
-    {{ fileName }}
+    {{ uri }}
     <ion-icon
       slot="end"
       :icon="folderOpenOutline"
     />
   </ion-item>
 
+  <!-- Waveform -->
+  <ion-item
+    :disabled="isWaveformDisabled"
+  >
+    <div
+      id="waveform"
+    />
+    <ion-note slot="helper">
+      Double click to add marker between lines of the verse
+    </ion-note>
+  </ion-item>
 
+  <ion-item
+    :disabled="isWaveformDisabled"
+  >
+    <ion-button
+      fill="clear"
+      color="dark"
+      @click="onPlayClicked"
+    >
+      <ion-icon
+        slot="start"
+        :icon="playCircle"
+        @click="onPlayClicked"
+      />
+      play
+    </ion-button>
+  </ion-item>
+
+  <!-- File picker -->
   <input
-    ref="file"
+    ref="fileInputRef"
     class="hidden"
     type="file"
-    @change="onFileChoose"
+    @change="onFileSelected"
   >
-
-  <!--
-  <ion-button @click="upload" />
-  <ion-button @click="play" />
-  -->
-
-  <!-- <ion-item> -->
-  <div
-    id="waveform"
-  />
-  <ion-note slot="helper">
-    Name of the theme
-  </ion-note>
-  <!-- </ion-item> -->
 </template>
 
 <script setup lang="ts">
-import { IonInput, IonNote, IonLabel, IonItem, IonIcon } from '@ionic/vue'
-import { folderOpenOutline } from 'ionicons/icons'
-import { defineEmits, defineProps, ref, onMounted, toRefs, watch, computed } from 'vue'
-import WaveSurfer from 'wavesurfer.js'
-import MarkersPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.markers.js'
+import { IonInput, IonNote, IonLabel, IonItem, IonIcon, IonButton } from '@ionic/vue'
+import { folderOpenOutline , playCircle } from 'ionicons/icons'
+import { defineProps, ref, onMounted, toRefs, watch, computed, withDefaults, onUnmounted } from 'vue'
+import getUuid from 'uuid-by-string'
 import { useEnvironment } from '@/shared/services/useEnvironment'
 import { useFileUploader } from '@/shared/services/useFileUploader'
-import { Declamation, getVerseRefenceId } from '../models/declamation'
+import { useWaveform , Declamation } from '@/declamations'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
-const props = defineProps<{
-  modelValue: Declamation
-}>()
+const props = withDefaults(defineProps<{
+  modelValue: Declamation,
+  disableVerseReference?: boolean,
+  disableTheme?: boolean,
+}>(), {
+  disableVerseNumber: false,
+  disableTheme: false,
+})
 
-const emit = defineEmits<{
-  (event: 'update:modelValue', verse: Declamation): void
-}>()
+
+/* -------------------------------------------------------------------------- */
+/*                                   Lifehooks                                */
+/* -------------------------------------------------------------------------- */
+
+onMounted(() => onOpened())
+onUnmounted(() => waveform.destroy())
+
+
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+
+const contentUrl = useEnvironment().getContentUrl()
+const uploader   = useFileUploader(contentUrl)
+const waveform   = useWaveform('#waveform')
+
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-let wavesurfer: any = undefined
-const file = ref()
-const fileName = ref('')
-const verseNumber = ref('')
-const { verseReferenceId, theme, uri } = toRefs(props.modelValue)
-const isFilePickerDisabled = computed(() => uri.value == '')
-
+const fileInputRef = ref()
+const { verseReference: verseReference, theme, uri, markers } = toRefs(props.modelValue)
+const isFilePickerDisabled = computed(() => !(theme.value && verseReference.value))
+const isWaveformDisabled = computed(() => !uri.value)
 
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-async function onFileChoose(event: any) {
-  const uploader = useFileUploader(useEnvironment().getContentUrl())
+async function onFileSelected(event: any) {
   const file = event.target.files[0]
-  fileName.value = file.name
-
   await uploader.upload(uri.value, file, file.type)
-  wavesurfer.load('http://localhost/content/' + uri.value)
-  wavesurfer.drawer.on('dblclick', (e: any) => {
-    const pos = wavesurfer.getCurrentTime()
-    wavesurfer.markers.add({
-      time: pos,
-      // label: 'V',
-      color: '#ff990a',
-      draggable: true
-    })
-    console.log(pos)
-  })
+  waveform.load(`${contentUrl}/${uri.value}`)
+}
+
+function onPlayClicked() {
+  waveform.play()
+}
+
+function onOpened() {
+  waveform.init()
+  if (uri.value) {
+    waveform.load(`${contentUrl}/${uri.value}`, markers.value)
+  }
 }
 
 /* -------------------------------------------------------------------------- */
 /*                                    Watch                                   */
 /* -------------------------------------------------------------------------- */
 
-watch([verseNumber, theme], () => {
-  verseReferenceId.value = getVerseRefenceId(verseNumber.value)
-  if (verseReferenceId.value && theme.value) {
-    uri.value = `declamation-${verseReferenceId.value}-${theme.value}.mp3`
+
+watch([verseReference, theme], () => {
+  if (verseReference.value && theme.value) {
+    const uuid = getUuid(`declamation-${verseReference.value}-${theme.value}`)
+    uri.value = `declamation-${uuid}.mp3`
   } else {
     uri.value = ''
   }
 })
 
-onMounted(() => {
-  wavesurfer = WaveSurfer.create({
-    container: document.querySelector('#waveform'),
-    // barHeight: 5,
-    barWidth: 3,
-    barRadius: 3,
-    cursorWidth: 1,
-    height: 200,
-    barGap: 3,
-    plugins: [ MarkersPlugin.create() ]
-  })
-})
-
-
-// watch([theme], () => {
-//   emit('update:modelValue', {
-//     ...props.modelValue,
-//     theme: theme.value
-//   })
-// })
-// const fileName = `verse-audio-${props.declamation.verseReferenceId}.mp3`
-// const url = 'http://localhost/content/' + fileName
-
-// async function upload() {
-//   await uploader.upload(fileName, file.value.files[0], file.value.files[0].type)
-//   // pass
-// }
-// var wavesurfer: any = undefined
-
-
-
-// function play() {
-//   // pass
-//   wavesurfer.play()
-//   const duration = wavesurfer.getDuration()
-
-//   const linesCount = props.verse.text.length
-
-//   for(const n of Array(linesCount+2).keys()) {
-//     wavesurfer.markers.add({
-//       time: duration / (linesCount+1) * n,
-//       label: `V${n + 1}`,
-//       color: '#ff990a',
-//       draggable: true
-//     })
-//   }
-// }
-
-
-/* -------------------------------------------------------------------------- */
-/*                                  Handlers                                  */
-/* -------------------------------------------------------------------------- */
-
-// finction onPickFileClicked() {
-//   uploader.pickFile().then((file) => {
-//     console.log(file)
-//   })
-// }
-
+watch(waveform.markers.value, (v) => { markers.value = v })
 </script>
 
 <style scoped>
-#root {
-  display: flex;
-  justify-content: center;
-}
-
 .hidden {
   display: none;
 }
 
-.waveform {
+#waveform {
   width: 100%;
-  height: 100%;
+  height: 200px;
   margin-top: 20px;
 }
 </style>

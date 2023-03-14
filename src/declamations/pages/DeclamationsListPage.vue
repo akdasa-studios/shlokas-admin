@@ -16,20 +16,38 @@
     </ion-header>
 
     <ion-content>
-      Declamations
-      <!-- <VersesList
-        :verses="verses"
-        @remove="onVerseRemove"
-      /> -->
+      <DeclamationsList
+        :declamations="declamations"
+        @remove="onDeclamationRemove"
+      />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
+import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from '@ionic/vue'
+import { ref } from 'vue'
+import { Declamation, useDeclamationsRepository, DeclamationsList } from '@/declamations'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
+const declamationsRepo = useDeclamationsRepository()
+const declamations = ref<Declamation[]>([])
+
+onIonViewWillEnter(async () => { await refresh() })
+
+async function refresh() {
+  declamations.value = await declamationsRepo.getAllDeclamations()
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  Handlers                                  */
+/* -------------------------------------------------------------------------- */
+
+async function onDeclamationRemove(id: string) {
+  await declamationsRepo.removeDeclamation(id)
+  await refresh()
+}
 </script>

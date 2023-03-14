@@ -12,6 +12,13 @@ export function useRepository<T>(
     }) as T[]
   }
 
+  async function save(data: T) {
+    return await database.save({
+      ...data,
+      '@type': collectionName,
+    })
+  }
+
   async function find(query: any): Promise<T[]> {
     return await database.find({ selector: {
       '@type': { '$eq': collectionName },
@@ -25,6 +32,6 @@ export function useRepository<T>(
   }
 
   return {
-    find, all, get
+    find, all, get, save
   }
 }

@@ -12,7 +12,7 @@ export function useVerseDetailsController() {
   }
 
   async function saveVerse(verse: Verse) {
-    await _database.put(verse)
+    await _database.save(verse)
   }
 
 

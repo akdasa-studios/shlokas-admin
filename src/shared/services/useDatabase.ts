@@ -21,7 +21,7 @@ export class Database {
     return await this.db.get(id)
   }
 
-  async put(doc: any) {
+  async save(doc: any) {
     console.log(doc)
     await this.db.upsert(
       doc._id,

@@ -1,9 +1,12 @@
- export interface Declamation {
+import getUuid from 'uuid-by-string'
+
+
+export interface Declamation {
   /** Unique identifier for the declamation */
   _id: string;
 
-  /** ID of the VerseReference that the declamation is based on. */
-  verseReferenceId: string;
+  /** Number of VerseReference  */
+  verseReference: string;
 
   /** Theme. Each verse might have several declamations. */
   theme: string
@@ -12,23 +15,19 @@
   uri: string;
 
   /** Markers */
-  markers: Marker[];
- }
-
-
-export interface Marker {
-  /** The start time of the marker in seconds. */
-  start: number;
+  markers: number[];
 }
+
 
 export const EmptyDeclamation = () => ({
   _id: '',
-  verseReferenceId: '',
+  verseReference: '',
   theme: '',
   uri: '',
   markers: []
 })
 
-export function getVerseRefenceId(verseNumber: string) {
-  return verseNumber
+
+export function getVerseRefenceId(verseReferenceNumber: string) {
+  return getUuid(verseReferenceNumber)
 }

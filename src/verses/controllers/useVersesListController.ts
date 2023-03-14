@@ -15,7 +15,7 @@ export function useVersesListController() {
 
   async function addVerse(data: Pick<Verse, 'number' | 'text' | 'translation' | 'language'|'synonyms'>) {
     const id = getUuid(data.language + data.number.toUpperCase(), 3)
-    await _database.put({
+    await _database.save({
       ...data,
       '@type': 'verse',
       _id: id,
