@@ -9,7 +9,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     name: 'declamations:create',
     path: 'declamations/create/:verseReference',
-    component: () => import('../pages/DeclamationsCreatePage.vue'),
+    component: () => import('../pages/DeclamationsEditPage.vue'),
     props: route => ({
       verseReference: route.params.verseReference,
     }),

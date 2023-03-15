@@ -13,7 +13,7 @@
 
     <ion-content class="ion-padding">
       <ion-list
-        v-if="longTask.executedYet.value"
+        v-if="loadDataTask.executedYet.value"
         lines="full"
       >
         <ion-list-header>
@@ -97,7 +97,7 @@ const props = defineProps<{
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const longTask = useLongTask()
+const loadDataTask = useLongTask(loadData)
 const versesRepo = useVersesRepository()
 const cardsRepo = useCardsRepository()
 const declamationsRepo = useDeclamationsRepository()
@@ -123,11 +123,17 @@ onMounted(onOpened)
 /* -------------------------------------------------------------------------- */
 
 async function onOpened() {
-  longTask.run(async () => {
-    verse.value = await versesRepo.getVerse(props.id)
-    cards.value = await cardsRepo.getCardsOfVerse(props.id)
-    declamations.value = await declamationsRepo.getDeclamationsOfVerseReference(getVerseReference(verse.value.number))
-  })
+  await loadDataTask.run()
+}
 
+
+/* -------------------------------------------------------------------------- */
+/*                                    Tasks                                   */
+/* -------------------------------------------------------------------------- */
+
+async function loadData() {
+  verse.value = await versesRepo.getVerse(props.id)
+  cards.value = await cardsRepo.getCardsOfVerse(props.id)
+  declamations.value = await declamationsRepo.getDeclamationsOfVerseReference(getVerseReference(verse.value.number))
 }
 </script>

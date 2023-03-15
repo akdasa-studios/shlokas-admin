@@ -6,11 +6,14 @@ export interface LongTaskOptions {
   duration?: number
 }
 
-export function useLongTask() {
+export function useLongTask(
+  task: () => Promise<void>,
+  options?: LongTaskOptions
+) {
   const _running = ref(false)
   const _executedYet = ref(false)
 
-  async function run(task: () => Promise<void>, options?: LongTaskOptions) {
+  async function run() {
     const loading = await loadingController.create({
       message: options?.message ?? 'Loading...',
       duration: options?.duration ?? 3000
