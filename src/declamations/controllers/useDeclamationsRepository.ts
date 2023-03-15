@@ -11,6 +11,10 @@ export function useDeclamationsRepository() {
     return await _repo.all()
   }
 
+  async function getDeclamationsOfVerseReference(verseReference: string): Promise<Declamation[]> {
+    return await _repo.find({ verseReference })
+  }
+
   async function saveDeclamation(declamation: Declamation) {
     declamation._id = getUuid(`declamation-${declamation.verseReference}-${declamation.theme}`)
     return await _repo.save(declamation)
@@ -25,6 +29,6 @@ export function useDeclamationsRepository() {
   }
 
   return {
-    getDeclamation, getAllDeclamations, saveDeclamation, removeDeclamation
+    getDeclamation, getAllDeclamations, saveDeclamation, removeDeclamation, getDeclamationsOfVerseReference
   }
 }

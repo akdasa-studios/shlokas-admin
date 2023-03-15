@@ -11,6 +11,10 @@ export function useCardsRepository() {
     return await _repo.all()
   }
 
+  async function getCardsOfVerse(verseId: string): Promise<Card[]> {
+    return await _repo.find({ verseId })
+  }
+
   async function saveCard(card: Card) {
     card._id = getUuid(`card-${card.verseId}-${card.theme}`)
     return await _repo.save(card)
@@ -25,6 +29,6 @@ export function useCardsRepository() {
   }
 
   return {
-    getCard, getAllCards, saveCard, removeCard
+    getCard, getAllCards, saveCard, removeCard, getCardsOfVerse
   }
 }

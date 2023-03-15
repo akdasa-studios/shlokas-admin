@@ -4,10 +4,11 @@ import WaveSurfer from 'wavesurfer.js'
 import MarkersPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.markers.js'
 
 export interface WaveformOptions {
-  barWidth: number,
-  barRadius: number,
-  barGap: number,
-  height: number,
+  barWidth?: number,
+  barRadius?: number,
+  barGap?: number,
+  height?: number,
+  editableMarkers?: boolean
 }
 
 export function useWaveform(
@@ -28,10 +29,12 @@ export function useWaveform(
       plugins: [MarkersPlugin.create()]
     })
 
-    _wavesurfer.drawer.on('dblclick', () => {
-      const pos = _wavesurfer.getCurrentTime()
-      addMarker(pos)
-    })
+    if (options?.editableMarkers ?? true) {
+      _wavesurfer.drawer.on('dblclick', () => {
+        const pos = _wavesurfer.getCurrentTime()
+        addMarker(pos)
+      })
+    }
 
     _wavesurfer.on('marker-drop', (event) => {
       const idx = parseInt(event.label)
@@ -47,7 +50,7 @@ export function useWaveform(
   function addMarker(time: number) {
     _wavesurfer.markers.add({
       time,
-      draggable: true,
+      draggable: options?.editableMarkers ?? true,
       label: _markers.value.length.toString(),
     })
     _markers.value.push(time)

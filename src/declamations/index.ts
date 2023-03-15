@@ -7,3 +7,4 @@ export { default as DeclamationsCreatePage }  from './pages/DeclamationsCreatePa
 export { default as DeclamationEditForm } from './components/DeclamationEditForm.vue'
 export { default as DeclamationsListItem } from './components/DeclamationsListItem.vue'
 export { default as DeclamationsList } from './components/DeclamationsList.vue'
+export { default as DeclamationPlayer } from './components/DeclamationPlayer.vue'

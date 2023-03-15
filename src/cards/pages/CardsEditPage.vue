@@ -14,16 +14,16 @@
           <ion-back-button />
         </ion-buttons>
 
-        <ion-title>Add Declamation</ion-title>
+        <ion-title>Add Card</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <DeclamationEditForm
-        v-if="declamation._id"
-        v-model="declamation"
-        :disable-verse-reference="true"
-        :disable-theme="true"
+      <CardEditForm
+        v-if="verse._id"
+        v-model="card"
+        :verse="verse"
+        @file-generated="onFileGenerated"
       />
     </ion-content>
   </ion-page>
@@ -31,41 +31,86 @@
 
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
-import { ref, defineProps, onMounted } from 'vue'
-import { DeclamationEditForm, Declamation, EmptyDeclamation, useDeclamationsRepository } from '@/declamations'
+import { onMounted, ref, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
+import { CardEditForm, Card, EmptyCard, useCardsRepository } from '@/cards'
+import { useVersesRepository, Verse } from '@/verses'
+import { useEnvironment, useFileUploader } from '@/shared'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  id: string
+  cardId?: string
 }>()
-
-/* -------------------------------------------------------------------------- */
-/*                                   Lifehooks                                */
-/* -------------------------------------------------------------------------- */
-
-onMounted(() => onOpened())
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const declamation = ref<Declamation>(EmptyDeclamation())
-const repo = useDeclamationsRepository()
+const cardsRepo = useCardsRepository()
+const verseRepo = useVersesRepository()
+const uploader = useFileUploader(useEnvironment().getContentUrl())
 const router = useIonRouter()
+const route = useRoute()
+
+/* -------------------------------------------------------------------------- */
+/*                                    State                                   */
+/* -------------------------------------------------------------------------- */
+
+const card = ref<Card>(EmptyCard())
+const verse = ref<Verse>({} as Verse)
+let generatedFile = ''
+
+/* -------------------------------------------------------------------------- */
+/*                                  Lifehooks                                 */
+/* -------------------------------------------------------------------------- */
+
+onMounted(async () => await onOpened())
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-function onSaveClicked() {
-  repo.saveDeclamation(declamation.value)
+async function onOpened() {
+  if (props.cardId) {
+    card.value = await cardsRepo.getCard(props.cardId)
+  }
+
+  // Load verse using verseId or card.verseId
+  // TODO: Vue bug: query parameters doesn't update props
+  const verseId = (route.query.verseId as string) || card.value.verseId
+  verse.value = await verseRepo.getVerse(verseId)
+
+  // If cardId is not provided, initialize card with verse data
+  if (!props.cardId) {
+    card.value.verseId = verse.value._id
+    card.value.verseNumber = verse.value.number
+    card.value.words = verse.value.synonyms.map(x => ({
+      text: x.translation,
+      line: x.lineNumber || 0,
+      posx: 0
+    }))
+  }
+}
+
+async function onSaveClicked() {
+  // TODO: Vue bug: query parameters doesn't update props
+  const verseId = (route.query.verseId as string) || card.value.verseId
+  card.value.theme = card.value.theme || 'default'
+  if (generatedFile) {
+    const fileName = `verse-card-${verseId}-${card.value.theme}.svg`
+    await uploader.upload(fileName, generatedFile, 'image/svg+xml')
+    card.value.uri = fileName
+  }
+  await cardsRepo.saveCard(card.value)
   router.back()
 }
 
-async function onOpened() {
-  declamation.value = await repo.getDeclamation(props.id)
+function onFileGenerated(file: string) {
+  generatedFile = file
 }
+
 </script>
