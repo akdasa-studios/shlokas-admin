@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
 import { onMounted, ref, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
 import { CardEditForm, Card, EmptyCard, useCardsRepository } from '@/cards'
 import { useVersesRepository, Verse } from '@/verses'
 import { useEnvironment, useFileUploader } from '@/shared'
@@ -41,7 +42,6 @@ import { useEnvironment, useFileUploader } from '@/shared'
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  verseId?: string
   cardId?: string
 }>()
 
@@ -53,6 +53,7 @@ const cardsRepo = useCardsRepository()
 const verseRepo = useVersesRepository()
 const uploader = useFileUploader(useEnvironment().getContentUrl())
 const router = useIonRouter()
+const route = useRoute()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -60,6 +61,7 @@ const router = useIonRouter()
 
 const card = ref<Card>(EmptyCard())
 const verse = ref<Verse>({} as Verse)
+const verseId = (route.query.verseId as string) // Vue bug: query parameters doesn't update props
 let generatedFile = ''
 
 /* -------------------------------------------------------------------------- */
@@ -74,13 +76,12 @@ onMounted(async () => await onOpened())
 /* -------------------------------------------------------------------------- */
 
 async function onOpened() {
-  // Load card if cardId is provided
   if (props.cardId) {
     card.value = await cardsRepo.getCard(props.cardId)
   }
 
   // Load verse using verseId or card.verseId
-  verse.value = await verseRepo.getVerse(props.verseId || card.value.verseId)
+  verse.value = await verseRepo.getVerse(verseId || card.value.verseId)
 
   // If cardId is not provided, initialize card with verse data
   if (!props.cardId) {
@@ -97,7 +98,7 @@ async function onOpened() {
 async function onSaveClicked() {
   card.value.theme = card.value.theme || 'default'
   if (generatedFile) {
-    const fileName = `verse-card-${props.verseId}-${card.value.theme}.svg`
+    const fileName = `verse-card-${verseId}-${card.value.theme}.svg`
     await uploader.upload(fileName, generatedFile, 'image/svg+xml')
     card.value.uri = fileName
   }

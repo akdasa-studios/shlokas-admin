@@ -19,9 +19,9 @@ export interface Declamation {
 }
 
 
-export const EmptyDeclamation = () => ({
+export const EmptyDeclamation = (verseReference='') => ({
   _id: '',
-  verseReference: '',
+  verseReference,
   theme: '',
   uri: '',
   markers: []

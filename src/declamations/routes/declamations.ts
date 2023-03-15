@@ -9,6 +9,9 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: 'declamations/create',
     component: () => import('../pages/DeclamationsCreatePage.vue'),
+    props: route => ({
+      verseReference: route.query.verseReference,
+    }),
   },
   {
     path: 'declamations/:id',

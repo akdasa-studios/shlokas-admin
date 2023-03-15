@@ -28,8 +28,13 @@
 
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 import { DeclamationEditForm, Declamation, EmptyDeclamation, useDeclamationsRepository } from '@/declamations'
+
+
+const props = defineProps<{
+  verseReference?: string,
+}>()
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -42,7 +47,7 @@ const router = useIonRouter()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const declamation = ref<Declamation>(EmptyDeclamation())
+const declamation = ref<Declamation>(EmptyDeclamation(props.verseReference))
 
 function onSaveClicked() {
   repo.saveDeclamation(declamation.value)

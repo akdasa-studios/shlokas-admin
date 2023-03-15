@@ -15,7 +15,9 @@
   </ion-item>
 
   <!-- Verse Number -->
-  <ion-item>
+  <ion-item
+    :class="numberValidation.classes.value"
+  >
     <ion-label position="stacked">
       Verse Number
     </ion-label>
@@ -23,9 +25,32 @@
       v-model="number"
       placeholder="BG 1.1"
       :disabled="disableNumber"
+      @ion-blur="numberValidation.markTouched"
     />
     <ion-note slot="helper">
       Use uppercase letters for book name and dots for separating verse numbers
+    </ion-note>
+    <ion-note slot="error">
+      Invalid verse number
+    </ion-note>
+  </ion-item>
+
+  <!-- Verse Reference -->
+  <ion-item :class="referenceValidation.classes.value">
+    <ion-label position="stacked">
+      Verse Reference
+    </ion-label>
+    <ion-input
+      v-model="reference"
+      placeholder="BG 1.1"
+      :disabled="disableNumber"
+      @ion-blur="referenceValidation.markTouched"
+    />
+    <ion-note slot="helper">
+      Use uppercase letters for book name and dots for separating verse numbers
+    </ion-note>
+    <ion-note slot="error">
+      Invalid reference number
     </ion-note>
   </ion-item>
 
@@ -66,12 +91,13 @@
 <script setup lang="ts">
 import { IonTextarea, IonInput, IonLabel, IonItem, IonNote } from '@ionic/vue'
 import { defineProps, ref, defineEmits, watch, withDefaults } from 'vue'
-import { Verse } from '../../models/verse'
+import { getVerseReference, isVerseNumberValid, isVerseReferencdValid, Verse } from '@/verses'
+import { useValidation } from '@/shared'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */
 /* -------------------------------------------------------------------------- */
-type EditableFields = 'language'|'number'|'text'|'translation'
+type EditableFields = 'language'|'number'|'text'|'translation'|'reference'
 
 const props = withDefaults(defineProps<{
   verse: Pick<Verse, EditableFields>,
@@ -90,22 +116,43 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const lang   = ref(props.verse.language)
-const number = ref(props.verse.number)
-const text   = ref(props.verse.text?.join('\n'))
+const lang        = ref(props.verse.language)
+const number      = ref(props.verse.number)
+const reference   = ref(props.verse.reference)
+const text        = ref(props.verse.text?.join('\n'))
 const translation = ref(props.verse.translation)
+
+const numberValidation    = useValidation(number, isVerseNumberValid)
+const referenceValidation = useValidation(reference, isVerseReferencdValid)
+
+
+/* -------------------------------------------------------------------------- */
+/*                                    Watch                                   */
+/* -------------------------------------------------------------------------- */
+
+watch([lang, number, text, translation, reference], () => {
+  onVerseChanged()
+})
+
+watch(number, onVerseNumberChanged)
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-watch([lang, number, text, translation], () => {
+function onVerseNumberChanged(value: string) {
+  reference.value = getVerseReference(value.toUpperCase())
+}
+
+function onVerseChanged() {
   emit('change', {
     ...props.verse as Verse,
     text: text.value?.split('\n'),
     translation: translation.value,
     language: lang.value,
     number: number.value,
+    reference: reference.value,
   })
-})
+}
 </script>

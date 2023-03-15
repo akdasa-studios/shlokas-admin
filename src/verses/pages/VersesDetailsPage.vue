@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
 import { defineProps, onMounted, ref } from 'vue'
-import { Verse, useVersesRepository } from '@/verses'
+import { Verse, useVersesRepository, getVerseReference } from '@/verses'
 
 
 /* -------------------------------------------------------------------------- */
@@ -50,9 +50,16 @@ const verse = ref<Verse>({} as Verse)
 const pages = [
   { title: 'Content', url: 'content' },
   { title: 'Synonyms', url: 'synonyms' },
+  { title: 'Add declamation', url: '/tabs/declamations/create' },
+  { title: 'Add card', url: '/tabs/cards/create' },
 ]
 
 function getUrl(url: string): string {
+  if (url.startsWith('/')) {
+    const vr = getVerseReference(verse.value.number)
+    const vid = verse.value._id
+    return url + `?verseReference=${vr}&verseId=${vid}`
+  }
   return `/tabs/verses/${verse.value._id}/${url}`
 }
 
