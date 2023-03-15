@@ -9,7 +9,6 @@ export { default as VerseSynonyms } from './components/verseDetails/VerseSynonym
 
 // controllers:
 export * from './controllers/useSynonymsParser'
-export * from './controllers/useWordsPacker'
 export * from './controllers/useVersesRepository'
 
 // models:

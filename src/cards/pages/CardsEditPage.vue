@@ -32,7 +32,6 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
 import { onMounted, ref, defineProps } from 'vue'
-import { useRoute } from 'vue-router'
 import { CardEditForm, Card, EmptyCard, useCardsRepository } from '@/cards'
 import { useVersesRepository, Verse } from '@/verses'
 import { useEnvironment, useFileUploader } from '@/shared'
@@ -43,6 +42,7 @@ import { useEnvironment, useFileUploader } from '@/shared'
 
 const props = defineProps<{
   cardId?: string
+  verseId?: string
 }>()
 
 /* -------------------------------------------------------------------------- */
@@ -53,7 +53,6 @@ const cardsRepo = useCardsRepository()
 const verseRepo = useVersesRepository()
 const uploader = useFileUploader(useEnvironment().getContentUrl())
 const router = useIonRouter()
-const route = useRoute()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -80,8 +79,7 @@ async function onOpened() {
   }
 
   // Load verse using verseId or card.verseId
-  // TODO: Vue bug: query parameters doesn't update props
-  const verseId = (route.query.verseId as string) || card.value.verseId
+  const verseId = props.verseId || card.value.verseId
   verse.value = await verseRepo.getVerse(verseId)
 
   // If cardId is not provided, initialize card with verse data
@@ -97,8 +95,7 @@ async function onOpened() {
 }
 
 async function onSaveClicked() {
-  // TODO: Vue bug: query parameters doesn't update props
-  const verseId = (route.query.verseId as string) || card.value.verseId
+  const verseId = props.verseId || card.value.verseId
   card.value.theme = card.value.theme || 'default'
   if (generatedFile) {
     const fileName = `verse-card-${verseId}-${card.value.theme}.svg`

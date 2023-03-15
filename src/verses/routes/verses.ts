@@ -22,6 +22,7 @@ export const routes: Array<RouteRecordRaw> = [
     }),
   },
   {
+    name: 'verses:content',
     path: 'verses/:id/content',
     component: VerseEditModalContainer,
     props: route => ({
@@ -35,6 +36,7 @@ export const routes: Array<RouteRecordRaw> = [
     }),
   },
   {
+    name: 'verses:synonyms',
     path: 'verses/:id/synonyms',
     component: VerseEditModalContainer,
     props: route => ({

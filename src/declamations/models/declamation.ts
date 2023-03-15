@@ -19,10 +19,10 @@ export interface Declamation {
 }
 
 
-export const EmptyDeclamation = (verseReference='') => ({
+export const EmptyDeclamation = (verseReference='', theme='default') => ({
   _id: '',
   verseReference,
-  theme: '',
+  theme,
   uri: '',
   markers: []
 })

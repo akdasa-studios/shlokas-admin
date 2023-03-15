@@ -47,7 +47,7 @@ const router = useIonRouter()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const declamation = ref<Declamation>(EmptyDeclamation(props.verseReference))
+const declamation = ref<Declamation>(EmptyDeclamation(props.verseReference, 'default'))
 
 function onSaveClicked() {
   repo.saveDeclamation(declamation.value)

@@ -12,37 +12,63 @@
     </ion-header>
 
     <ion-content class="ion-padding">
-      <div
-        v-for="card in cards"
-        :key="card._id"
-        class="image-container"
+      <ion-list
+        v-if="longTask.executedYet.value"
+        lines="full"
       >
-        <img
-          class="image"
-          :src="'http://localhost/content/'+card.uri+forceImageReload"
-          @click="() => onImageClicked(card._id)"
-        >
+        <ion-list-header>
+          <ion-label>Content</ion-label>
+        </ion-list-header>
 
-        <div
+        <ion-item
+          :detail="true"
+          :router-link="go('verses:content')"
+        >
+          <ion-label>Content</ion-label>
+        </ion-item>
+        <ion-item
+          :detail="true"
+          :router-link="go('verses:synonyms')"
+        >
+          <ion-label>Synonyms</ion-label>
+        </ion-item>
+
+        <!-- Cards -->
+        <ion-list-header>
+          <ion-label>Cards</ion-label>
+        </ion-list-header>
+        <ion-item
+          v-for="card in cards"
+          :key="card._id"
+          :detail="true"
+          :router-link="go('cards:edit', {id: card._id})"
+        >
+          {{ card.theme }}
+        </ion-item>
+        <ion-item
+          :detail="true"
+          :router-link="go('cards:create', {verseId: verse._id})"
+        >
+          Add card
+        </ion-item>
+
+        <!-- Declamations -->
+        <ion-list-header>
+          <ion-label>Declamations</ion-label>
+        </ion-list-header>
+        <ion-item
           v-for="declamation in declamations"
           :key="declamation._id"
-          class="player-container"
-        >
-          <DeclamationPlayer
-            :declamation="declamation"
-          />
-        </div>
-      </div>
-
-
-      <ion-list lines="full">
-        <ion-item
-          v-for="page in pages"
-          :key="page.title"
           :detail="true"
-          :router-link="getUrl(page.url)"
+          :router-link="go('declamations:edit', {id: declamation._id})"
         >
-          <ion-label>{{ page.title }}</ion-label>
+          {{ declamation.theme }}
+        </ion-item>
+        <ion-item
+          :detail="true"
+          :router-link="go('declamations:create', {verseReference: getVerseReference(verse.number)})"
+        >
+          Add declamation
         </ion-item>
       </ion-list>
     </ion-content>
@@ -50,11 +76,12 @@
 </template>
 
 <script setup lang="ts">
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar, useIonRouter, onIonViewWillEnter } from '@ionic/vue'
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar, IonListHeader } from '@ionic/vue'
 import { defineProps, onMounted, ref } from 'vue'
 import { Verse, useVersesRepository, getVerseReference } from '@/verses'
 import { Card, useCardsRepository } from '@/cards'
-import { Declamation, DeclamationPlayer, useDeclamationsRepository } from '@/declamations'
+import { Declamation, useDeclamationsRepository } from '@/declamations'
+import { go, useLongTask } from '@/shared'
 
 
 /* -------------------------------------------------------------------------- */
@@ -70,19 +97,10 @@ const props = defineProps<{
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
+const longTask = useLongTask()
 const versesRepo = useVersesRepository()
 const cardsRepo = useCardsRepository()
 const declamationsRepo = useDeclamationsRepository()
-const router = useIonRouter()
-
-/* -------------------------------------------------------------------------- */
-/*                                  Lifehooks                                 */
-/* -------------------------------------------------------------------------- */
-
-onIonViewWillEnter(() => {
-  console.log('onIonViewWillEnter')
-  forceImageReload.value = '?'+Math.random()
-})
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -91,60 +109,25 @@ onIonViewWillEnter(() => {
 const verse = ref<Verse>({} as Verse)
 const cards = ref<Card[]>([])
 const declamations = ref<Declamation[]>([])
-const forceImageReload = ref('')
-const pages = [
-  { title: 'Content', url: 'content' },
-  { title: 'Synonyms', url: 'synonyms' },
-  { title: 'Add declamation', url: '/tabs/declamations/create' },
-  { title: 'Add card', url: '/tabs/cards/create' },
-]
+
+
+/* -------------------------------------------------------------------------- */
+/*                                 Lifehooks                                  */
+/* -------------------------------------------------------------------------- */
+
+onMounted(onOpened)
 
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-onMounted(async () => {
-  verse.value = await versesRepo.getVerse(props.id)
-  cards.value = await cardsRepo.getCardsOfVerse(props.id)
-  declamations.value = await declamationsRepo.getDeclamationsOfVerseReference(getVerseReference(verse.value.number))
-})
+async function onOpened() {
+  longTask.run(async () => {
+    verse.value = await versesRepo.getVerse(props.id)
+    cards.value = await cardsRepo.getCardsOfVerse(props.id)
+    declamations.value = await declamationsRepo.getDeclamationsOfVerseReference(getVerseReference(verse.value.number))
+  })
 
-function onImageClicked(id: string) {
-  router.push('/tabs/cards/' + id)
 }
-
-
-/* -------------------------------------------------------------------------- */
-/*                                   Helpers                                  */
-/* -------------------------------------------------------------------------- */
-
-function getUrl(url: string): string {
-  if (url.startsWith('/')) {
-    const vr = getVerseReference(verse.value.number)
-    const vid = verse.value._id
-    return url + `?verseReference=${vr}&verseId=${vid}`
-  }
-  return `/tabs/verses/${verse.value._id}/${url}`
-}
-
 </script>
-
-<style>
-.image {
-  max-height: 240px;
-  /* align-self: center; */
-}
-
-.image-container {
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-}
-
-.player-container {
-  width: 50%;
-}
-</style>

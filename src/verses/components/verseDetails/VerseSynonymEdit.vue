@@ -22,15 +22,6 @@
 
   <ion-item>
     <ion-label position="stacked">
-      Short Translation
-    </ion-label>
-    <ion-input
-      v-model="synonym.shortTranslation"
-    />
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="stacked">
       Line Number
     </ion-label>
     <ion-input

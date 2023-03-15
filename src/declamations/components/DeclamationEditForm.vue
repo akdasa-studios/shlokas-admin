@@ -144,6 +144,7 @@ const referenceValidation = useValidation(verseReference, isVerseReferencdValid)
 /* -------------------------------------------------------------------------- */
 
 async function onFileSelected(event: any) {
+  console.log(`${contentUrl}/${uri.value}`)
   const file = event.target.files[0]
   await uploader.upload(uri.value, file, file.type)
   waveform.load(`${contentUrl}/${uri.value}`)
@@ -172,7 +173,7 @@ watch([verseReference, theme], () => {
   } else {
     uri.value = ''
   }
-})
+}, { immediate: true })
 
 watch(waveform.markers.value, (v) => { markers.value = v })
 </script>

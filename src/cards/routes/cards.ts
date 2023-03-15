@@ -7,10 +7,15 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('../pages/CardsListPage.vue'),
   },
   {
-    path: 'cards/create',
+    name: 'cards:create',
+    path: 'cards/create/:verseId',
     component: () => import('../pages/CardsEditPage.vue'),
+    props: route => ({
+      verseId: route.params.verseId,
+    }),
   },
   {
+    name: 'cards:edit',
     path: 'cards/:id',
     component:  () => import('../pages/CardsEditPage.vue'),
     props: route => ({

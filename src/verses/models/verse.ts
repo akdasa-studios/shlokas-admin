@@ -4,9 +4,6 @@ export interface Synonym {
   words: string[];
   translation: string;
   lineNumber?: number;
-
-  shortTranslation?: string;
-  positionX?: number
 }
 
 export interface Verse {
@@ -18,8 +15,6 @@ export interface Verse {
   translation: string;
   synonyms: Synonym[];
   language: string;
-  textAudioUri: string,
-  textImageUri: string
 }
 
 export function getVerseReference(number: string) {
