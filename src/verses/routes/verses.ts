@@ -43,13 +43,4 @@ export const routes: Array<RouteRecordRaw> = [
       title: 'Content'
     }),
   },
-  {
-    path: 'verses/:id/card',
-    component: VerseEditModalContainer,
-    props: route => ({
-      id: route.params.id,
-      component: import('../components/verseDetails/VerseCard.vue'),
-      title: 'Content'
-    }),
-  },
 ]

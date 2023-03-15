@@ -30,8 +30,7 @@
 <script setup lang="ts">
 import { IonPage, IonToolbar, IonButtons, IonTitle, IonHeader, IonContent, IonButton, IonBackButton, useIonRouter } from '@ionic/vue'
 import { defineProps, onMounted, ref, shallowRef, withDefaults } from 'vue'
-import { useVerseDetailsController } from '../controllers/useVerseDetailsController'
-import { Verse } from '../models/verse'
+import { useVersesRepository, Verse } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Inerface                                  */
@@ -50,7 +49,7 @@ const props = withDefaults(defineProps<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const versesController = useVerseDetailsController()
+const versesRepo = useVersesRepository()
 const router = useIonRouter()
 const verse = ref<Verse>({} as Verse)
 const component = shallowRef()
@@ -60,7 +59,7 @@ const component = shallowRef()
 /* -------------------------------------------------------------------------- */
 
 onMounted(async () => {
-  verse.value = await versesController.getVerse(props.id)
+  verse.value = await versesRepo.getVerse(props.id)
   // @ts-ignore
   component.value = (await props.component).default
 })
@@ -70,7 +69,7 @@ function onVerseChanged(changedVerse: Verse) {
 }
 
 function onSaveClicked() {
-  versesController.saveVerse(verse.value)
+  versesRepo.saveVerse(verse.value)
   router.back()
 }
 </script>

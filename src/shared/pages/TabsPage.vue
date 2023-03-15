@@ -26,6 +26,17 @@
         </ion-tab-button>
 
         <ion-tab-button
+          tab="cards"
+          href="/tabs/cards"
+        >
+          <ion-icon
+            aria-hidden="true"
+            :icon="imageOutline"
+          />
+          <ion-label>Cards</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button
           tab="users"
           href="/tabs/users"
         >
@@ -42,5 +53,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue'
-import { libraryOutline, peopleOutline, musicalNotesOutline } from 'ionicons/icons'
+import { libraryOutline, peopleOutline, musicalNotesOutline, imageOutline } from 'ionicons/icons'
 </script>

@@ -29,8 +29,7 @@
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
 import { defineProps, onMounted, ref } from 'vue'
-import { useVerseDetailsController } from '../controllers/useVerseDetailsController'
-import { Verse } from '../models/verse'
+import { Verse, useVersesRepository } from '@/verses'
 
 
 /* -------------------------------------------------------------------------- */
@@ -46,12 +45,11 @@ const props = defineProps<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const versesController = useVerseDetailsController()
+const versesRepo = useVersesRepository()
 const verse = ref<Verse>({} as Verse)
 const pages = [
   { title: 'Content', url: 'content' },
   { title: 'Synonyms', url: 'synonyms' },
-  { title: 'Card', url: 'card' },
 ]
 
 function getUrl(url: string): string {
@@ -64,6 +62,6 @@ function getUrl(url: string): string {
 /* -------------------------------------------------------------------------- */
 
 onMounted(async () => {
-  verse.value = await versesController.getVerse(props.id)
+  verse.value = await versesRepo.getVerse(props.id)
 })
 </script>

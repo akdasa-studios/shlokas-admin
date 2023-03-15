@@ -35,13 +35,13 @@
 <script setup lang="ts">
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter } from '@ionic/vue'
 import { ref } from 'vue'
-import { VerseContent, Synonym, useVersesListController, VerseSynonymParser } from '@/verses'
+import { VerseContent, Synonym, VerseSynonymParser, useVersesRepository } from '@/verses'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const versesListController = useVersesListController()
+const versesRepo = useVersesRepository()
 const router = useIonRouter()
 const verseContent = ref({
   number: '',
@@ -56,7 +56,8 @@ const synonyms = ref<Synonym[]>([])
 /* -------------------------------------------------------------------------- */
 
 async function onSaveClicked() {
-  await versesListController.addVerse({
+  // @ts-ignore
+  await versesRepo.saveVerse({
     ...verseContent.value,
     synonyms: synonyms.value
   })

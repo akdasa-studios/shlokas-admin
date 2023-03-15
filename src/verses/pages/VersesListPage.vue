@@ -24,7 +24,7 @@
 
     <ion-content>
       <ion-loading
-        :is-open="isLoading"
+        :is-open="isSyncing"
         message="Please wait..."
         :duration="0"
       />
@@ -40,37 +40,36 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonLoading, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from '@ionic/vue'
 import { onMounted, ref } from 'vue'
-import { useVersesListController, Verse, VersesList } from '@/verses'
+import { useVersesRepository, Verse, VersesList } from '@/verses'
+import { useSync } from '@/shared'
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const versesListController = useVersesListController()
+const versesRepo = useVersesRepository()
 const verses = ref<Verse[]>([])
-const isLoading = ref(false)
+const { sync, isSyncing } = useSync()
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-onMounted(async () => { await sync() })
+onMounted(async () => { await onSync() })
 onIonViewWillEnter(async () => { await refresh() })
 
 async function onVerseRemove(id: string) {
-  await versesListController.remove(id)
+  await versesRepo.removeVerse(id)
   await refresh()
 }
 
 async function refresh() {
-  verses.value = await versesListController.getAllVerses()
+  verses.value = await versesRepo.getAllVerses()
 }
 
-async function sync() {
+async function onSync() {
   try {
-    isLoading.value = true
-    await versesListController.sync()
-    isLoading.value = false
+    await sync()
   } catch (err) {
     console.error('Error syncing verses list.', err)
   }
