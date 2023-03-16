@@ -3,6 +3,10 @@ export function useEnvironment() {
   const host = env === 'production' ? 'shlokas.app' : 'localhost'
   const protocol = env === 'production' ? 'https' : 'http'
 
+  function getDatabaseUrl(login: string, password: string, database: string) {
+    return `${protocol}://${login}:${password}@${host}/db/${database}`
+  }
+
   function getTotpUrl() {
     return `${protocol}://${host}/totp/validate`
   }
@@ -13,6 +17,7 @@ export function useEnvironment() {
 
   return {
     getTotpUrl,
-    getContentUrl
+    getContentUrl,
+    getDatabaseUrl
   }
 }
