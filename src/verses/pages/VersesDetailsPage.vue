@@ -33,21 +33,21 @@
           <ion-label>Synonyms</ion-label>
         </ion-item>
 
-        <!-- Cards -->
+        <!-- Images -->
         <ion-list-header>
-          <ion-label>Cards</ion-label>
-          <ion-button :router-link="go('cards:create', {verseId: verse._id})">
+          <ion-label>Images</ion-label>
+          <ion-button :router-link="go('images:create', {verseId: verse._id})">
             <ion-icon />
             Add
           </ion-button>
         </ion-list-header>
         <ion-item
-          v-for="card in cards"
-          :key="card._id"
+          v-for="image in images"
+          :key="image._id"
           :detail="true"
-          :router-link="go('cards:edit', {id: card._id})"
+          :router-link="go('images:edit', {id: image._id})"
         >
-          {{ card.theme }}
+          {{ image.theme }}
         </ion-item>
 
         <!-- Declamations -->
@@ -84,7 +84,7 @@ import {
 import { defineProps, ref } from 'vue'
 import { RouteLocationRaw } from 'vue-router'
 import { Verse, useVersesRepository, getVerseReference, CreateDeclamationActionSheet } from '@/verses'
-import { Card, useCardsRepository } from '@/cards'
+import { Image, useImagesRepository } from '@/images'
 import { Declamation, useDeclamationsRepository } from '@/declamations'
 import { go, useLongTask } from '@/shared'
 import router from '@/router'
@@ -104,7 +104,7 @@ const props = defineProps<{
 
 const loadDataTask = useLongTask(loadData)
 const versesRepo = useVersesRepository()
-const cardsRepo = useCardsRepository()
+const imagesRepo = useImagesRepository()
 const declamationsRepo = useDeclamationsRepository()
 
 /* -------------------------------------------------------------------------- */
@@ -112,7 +112,7 @@ const declamationsRepo = useDeclamationsRepository()
 /* -------------------------------------------------------------------------- */
 
 const verse = ref<Verse>({} as Verse)
-const cards = ref<Card[]>([])
+const images = ref<Image[]>([])
 const declamations = ref<Declamation[]>([])
 const isCreateDeclamationOpen = ref(false)
 
@@ -154,7 +154,7 @@ function onCreateDeclamationDismissed(type: string) {
 
 async function loadData() {
   verse.value = await versesRepo.getVerse(props.id)
-  cards.value = await cardsRepo.getCardsOfVerse(props.id)
+  images.value = await imagesRepo.getImagesOfVerse(props.id)
   declamations.value = await declamationsRepo.getDeclamationsOfVerse(
     [getVerseReference(verse.value.number), verse.value._id]
   )

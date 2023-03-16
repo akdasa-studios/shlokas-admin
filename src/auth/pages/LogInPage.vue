@@ -86,7 +86,6 @@ const isLogInButtonEnabled = computed(() => login.value && password.value && tot
 async function onLogInClicked() {
   const authResult = await authService.logIn(login.value, password.value)
   const totpResult = await totpService.validate(totp.value)
-  console.log(authResult, totpResult)
   if (authResult && totpResult) {
     authStore.loggedIn(login.value, password.value)
     router.push({ name: 'home' })

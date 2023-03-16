@@ -15,7 +15,7 @@ import { IonItem, IonTextarea } from '@ionic/vue'
 import { fabric } from 'fabric'
 import { defineEmits, defineProps, onMounted, toRefs, watch } from 'vue'
 import { Verse } from '@/verses'
-import { Card, useCanvas, useWordsPacker } from '@/cards'
+import { Image, useCanvas, useWordsPacker } from '@/images'
 
 
 /* -------------------------------------------------------------------------- */
@@ -24,7 +24,7 @@ import { Card, useCanvas, useWordsPacker } from '@/cards'
 
 const props = defineProps<{
   verse: Verse,
-  modelValue: Card
+  modelValue: Image
 }>()
 
 const emit = defineEmits<{

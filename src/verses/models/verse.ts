@@ -22,7 +22,6 @@ export function getVerseReference(number: string) {
 }
 
 export function isVerseNumberValid(number: string) {
-  console.log(number)
   if (number.toUpperCase() != number) return false
   if (number.trim() != number) return false
 

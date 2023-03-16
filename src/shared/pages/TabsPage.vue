@@ -26,14 +26,14 @@
         </ion-tab-button>
 
         <ion-tab-button
-          tab="cards"
-          href="/tabs/cards"
+          tab="images"
+          href="/tabs/images"
         >
           <ion-icon
             aria-hidden="true"
             :icon="imageOutline"
           />
-          <ion-label>Cards</ion-label>
+          <ion-label>Images</ion-label>
         </ion-tab-button>
 
         <ion-tab-button

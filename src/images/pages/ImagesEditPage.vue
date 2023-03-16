@@ -14,12 +14,12 @@
           <ion-back-button />
         </ion-buttons>
 
-        <ion-title>Add Card</ion-title>
+        <ion-title>Add Image</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <CardEditForm
+      <ImageEditForm
         v-if="verse._id"
         v-model="card"
         :verse="verse"
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
 import { onMounted, ref, defineProps } from 'vue'
-import { CardEditForm, Card, EmptyCard, useCardsRepository } from '@/cards'
+import { ImageEditForm, Image, EmptyImage, useImagesRepository } from '@/images'
 import { useVersesRepository, Verse } from '@/verses'
 import { useEnvironment, useFileUploader } from '@/shared'
 
@@ -49,7 +49,7 @@ const props = defineProps<{
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const cardsRepo = useCardsRepository()
+const imagesRepo = useImagesRepository()
 const verseRepo = useVersesRepository()
 const uploader = useFileUploader(useEnvironment().getContentUrl())
 const router = useIonRouter()
@@ -58,7 +58,7 @@ const router = useIonRouter()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const card = ref<Card>(EmptyCard())
+const card = ref<Image>(EmptyImage())
 const verse = ref<Verse>({} as Verse)
 let generatedFile = ''
 
@@ -75,7 +75,7 @@ onMounted(async () => await onOpened())
 
 async function onOpened() {
   if (props.cardId) {
-    card.value = await cardsRepo.getCard(props.cardId)
+    card.value = await imagesRepo.getImage(props.cardId)
   }
 
   // Load verse using verseId or card.verseId
@@ -102,7 +102,7 @@ async function onSaveClicked() {
     await uploader.upload(fileName, generatedFile, 'image/svg+xml')
     card.value.uri = fileName
   }
-  await cardsRepo.saveCard(card.value)
+  await imagesRepo.saveImage(card.value)
   router.back()
 }
 

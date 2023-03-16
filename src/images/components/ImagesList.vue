@@ -1,7 +1,7 @@
 <template>
   <ion-list>
-    <CardsListItem
-      v-for="card in props.cards"
+    <ImagesListItem
+      v-for="card in props.images"
       :key="card._id"
       :card="card"
       @remove="(id: string) => emit('remove', id)"
@@ -12,14 +12,14 @@
 <script setup lang="ts">
 import { IonList } from '@ionic/vue'
 import { defineProps, defineEmits } from 'vue'
-import { Card, CardsListItem } from '@/cards'
+import { Image, ImagesListItem } from '@/images'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  cards: Card[]
+  images: Image[]
 }>()
 
 const emit = defineEmits<{

@@ -1,4 +1,4 @@
-export interface Card {
+export interface Image {
   _id: string;
   verseId: string;
   verseNumber: string;
@@ -14,7 +14,7 @@ export interface Word {
 }
 
 
-export const EmptyCard = () => ({
+export const EmptyImage = () => ({
   _id: '',
   verseId: '',
   verseNumber: '',

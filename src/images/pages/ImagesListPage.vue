@@ -4,21 +4,21 @@
       <ion-toolbar>
         <ion-buttons slot="primary">
           <ion-button
-            router-link="/tabs/cards/create"
+            router-link="/tabs/images/create"
             router-direction="forward"
           >
             Add
           </ion-button>
         </ion-buttons>
 
-        <ion-title>Cards</ion-title>
+        <ion-title>Images</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <CardsList
-        :cards="cards"
-        @remove="onCardRemove"
+      <ImagesList
+        :images="images"
+        @remove="onImageRemove"
       />
     </ion-content>
   </ion-page>
@@ -27,20 +27,20 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from '@ionic/vue'
 import { ref } from 'vue'
-import { Card, useCardsRepository, CardsList } from '@/cards'
+import { Image, useImagesRepository, ImagesList } from '@/images'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const cardsRepo = useCardsRepository()
+const imagesRepo = useImagesRepository()
 
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const cards = ref<Card[]>([])
+const images = ref<Image[]>([])
 
 
 /* -------------------------------------------------------------------------- */
@@ -54,12 +54,12 @@ onIonViewWillEnter(async () => { await onRefresh() })
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-async function onCardRemove(id: string) {
-  await cardsRepo.removeCard(id)
+async function onImageRemove(id: string) {
+  await imagesRepo.removeImage(id)
   await onRefresh()
 }
 
 async function onRefresh() {
-  cards.value = await cardsRepo.getAllCards()
+  images.value = await imagesRepo.getAllImages()
 }
 </script>

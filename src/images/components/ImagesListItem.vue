@@ -10,15 +10,9 @@
     </ion-item-options>
 
     <ion-item>
-      <!-- <ion-thumbnail slot="start">
-        <img
-          alt="Silhouette of mountains"
-          :src="'http://localhost/content/' + props.card.uri"
-        >
-      </ion-thumbnail> -->
       <ion-label
         class="ion-text-wrap"
-        :router-link="'/tabs/cards/' + props.card._id"
+        :router-link="'/tabs/images/' + props.card._id"
         router-direction="forward"
       >
         <h2>{{ props.card.verseNumber }}</h2>
@@ -31,14 +25,14 @@
 <script setup lang="ts">
 import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/vue'
 import { defineProps, defineEmits } from 'vue'
-import { Card } from '@/cards'
+import { Image } from '@/images'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  card: Card
+  card: Image
 }>()
 
 const emit = defineEmits<{

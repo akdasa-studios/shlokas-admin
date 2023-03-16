@@ -1,8 +1,8 @@
 import { fabric } from 'fabric'
 import { Verse } from '@/verses'
-import { Card } from '@/cards'
+import { Image } from '@/images'
 
-export interface VersCardPackerOptions {
+export interface VersImagePackerOptions {
   fontFamily: string, // Georgia
   fontSize: number, // 60*zoom
   lineSpace: number, //5*zoom
@@ -12,8 +12,8 @@ export function useWordsPacker() {
   function pack(
     canvas: fabric.Canvas,
     verse: Verse,
-    card: Card,
-    options: VersCardPackerOptions
+    card: Image,
+    options: VersImagePackerOptions
   ) {
     const result       = [] // todo: looks useless
     const synonymNodes = [] // todo: looks useless

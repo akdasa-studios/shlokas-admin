@@ -6,7 +6,7 @@ import { TabsPage } from '@/shared'
 import { useAuthStore, routes as authRoute } from '@/auth'
 import { routes as declamationsRoute } from '@/declamations'
 import { routes as usersRoute } from './users'
-import { routes as cardsRoute } from './cards'
+import { routes as imagesRoute } from './images'
 
 const routes: Array<RouteRecordRaw> = [
   ...authRoute,
@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
       ...libraryRoute,
       ...usersRoute,
       ...declamationsRoute,
-      ...cardsRoute
+      ...imagesRoute
     ],
   },
 ]

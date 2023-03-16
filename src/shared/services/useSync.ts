@@ -13,11 +13,9 @@ export function useSync() {
     const protocol = env === 'production' ? 'https' : 'http'
 
     const url = `${protocol}://${_auth.login}:${_auth.password}@${host}/db/shlokas`
-    console.log(url)
     _isSyncing.value = true
-    const res = await _database.sync(url)
+    await _database.sync(url)
     _isSyncing.value = false
-    console.log(res)
   }
 
   return { sync, isSyncing: _isSyncing }
