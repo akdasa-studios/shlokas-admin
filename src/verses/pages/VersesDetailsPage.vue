@@ -36,6 +36,10 @@
         <!-- Cards -->
         <ion-list-header>
           <ion-label>Cards</ion-label>
+          <ion-button :router-link="go('cards:create', {verseId: verse._id})">
+            <ion-icon />
+            Add
+          </ion-button>
         </ion-list-header>
         <ion-item
           v-for="card in cards"
@@ -45,18 +49,12 @@
         >
           {{ card.theme }}
         </ion-item>
-        <ion-item
-          :detail="true"
-          :router-link="go('cards:create', {verseId: verse._id})"
-        >
-          Add card
-        </ion-item>
 
         <!-- Declamations -->
         <ion-list-header>
           <ion-label>Declamations</ion-label>
           <ion-button @click="onCreateDeclamationClicked">
-            <ion-icon :icon="addCircleOutline" />
+            <ion-icon />
             Add
           </ion-button>
         </ion-list-header>
@@ -84,7 +82,6 @@ import {
   IonPage, IonTitle, IonToolbar, IonListHeader, IonButton, onIonViewWillEnter, IonIcon,
 } from '@ionic/vue'
 import { defineProps, ref } from 'vue'
-import { addCircleOutline } from 'ionicons/icons'
 import { RouteLocationRaw } from 'vue-router'
 import { Verse, useVersesRepository, getVerseReference, CreateDeclamationActionSheet } from '@/verses'
 import { Card, useCardsRepository } from '@/cards'
