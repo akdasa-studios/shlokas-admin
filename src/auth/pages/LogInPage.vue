@@ -55,7 +55,18 @@
 import { ref, computed } from 'vue'
 import { IonButton, IonInput, IonPage, IonContent } from '@ionic/vue'
 import { useRouter } from 'vue-router'
-import { useAuthController } from '../controllers/useAuthController'
+import { useAuthService, useAuthStore, useTotpService } from '@/auth'
+
+
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+
+const authStore = useAuthStore()
+const authService = useAuthService()
+const totpService = useTotpService()
+const router = useRouter()
+
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -65,7 +76,6 @@ const login = ref('')
 const password = ref('')
 const totp = ref('')
 const showError = ref(false)
-const controller = useAuthController(useRouter())
 const isLogInButtonEnabled = computed(() => login.value && password.value && totp.value)
 
 
@@ -74,8 +84,15 @@ const isLogInButtonEnabled = computed(() => login.value && password.value && tot
 /* -------------------------------------------------------------------------- */
 
 async function onLogInClicked() {
-  const isSuccessful = await controller.logIn(login.value, password.value, totp.value)
-  showError.value = !isSuccessful
+  const authResult = await authService.logIn(login.value, password.value)
+  const totpResult = await totpService.validate(totp.value)
+  console.log(authResult, totpResult)
+  if (authResult && totpResult) {
+    authStore.loggedIn(login.value, password.value)
+    router.push({ name: 'home' })
+  } else {
+    showError.value = !(authResult && totpResult)
+  }
 }
 </script>
 
