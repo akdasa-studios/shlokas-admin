@@ -11,8 +11,10 @@ export function useDeclamationsRepository() {
     return await _repo.all()
   }
 
-  async function getDeclamationsOfVerseReference(verseReference: string): Promise<Declamation[]> {
-    return await _repo.find({ verseReference })
+  async function getDeclamationsOfVerse(verseReferences: string[]): Promise<Declamation[]> {
+    return await _repo.find({
+      verseReference: { $in: verseReferences }
+    })
   }
 
   async function saveDeclamation(declamation: Declamation) {
@@ -29,6 +31,6 @@ export function useDeclamationsRepository() {
   }
 
   return {
-    getDeclamation, getAllDeclamations, saveDeclamation, removeDeclamation, getDeclamationsOfVerseReference
+    getDeclamation, getAllDeclamations, saveDeclamation, removeDeclamation, getDeclamationsOfVerse
   }
 }

@@ -1,27 +1,6 @@
 <template>
   <!-- Verse Number -->
   <ion-item
-    :disabled="disableVerseReference"
-    :class="referenceValidation.classes.value"
-  >
-    <ion-label position="stacked">
-      Verse Reference
-    </ion-label>
-    <ion-input
-      v-model="verseReference"
-      placeholder="BG 1.1"
-      @ion-blur="referenceValidation.markTouched"
-    />
-    <ion-note slot="helper">
-      Use uppercase letters for book name and dots for separating verse numbers
-    </ion-note>
-    <ion-note slot="error">
-      Invalid reference number
-    </ion-note>
-  </ion-item>
-
-  <!-- Verse Number -->
-  <ion-item
     :disabled="disableTheme"
   >
     <ion-label position="stacked">
@@ -95,8 +74,6 @@ import getUuid from 'uuid-by-string'
 import { useEnvironment } from '@/shared/services/useEnvironment'
 import { useFileUploader } from '@/shared/services/useFileUploader'
 import { useWaveform , Declamation } from '@/declamations'
-import { isVerseReferencdValid } from '@/verses'
-import { useValidation } from '@/shared'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -137,7 +114,6 @@ const fileInputRef = ref()
 const { verseReference, theme, uri, markers } = toRefs(props.modelValue)
 const isFilePickerDisabled = computed(() => !(theme.value && verseReference.value))
 const isWaveformDisabled = computed(() => !uri.value)
-const referenceValidation = useValidation(verseReference, isVerseReferencdValid)
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */

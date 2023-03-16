@@ -55,6 +55,10 @@
         <!-- Declamations -->
         <ion-list-header>
           <ion-label>Declamations</ion-label>
+          <ion-button @click="onCreateDeclamationClicked">
+            <ion-icon :icon="addCircleOutline" />
+            Add
+          </ion-button>
         </ion-list-header>
         <ion-item
           v-for="declamation in declamations"
@@ -62,27 +66,31 @@
           :detail="true"
           :router-link="go('declamations:edit', {id: declamation._id})"
         >
-          {{ declamation.theme }}
-        </ion-item>
-        <ion-item
-          :detail="true"
-          :router-link="go('declamations:create', {verseReference: getVerseReference(verse.number)})"
-        >
-          Add declamation
+          {{ declamation.theme }} {{ declamation.type }}
         </ion-item>
       </ion-list>
     </ion-content>
+
+    <CreateDeclamationActionSheet
+      :is-open="isCreateDeclamationOpen"
+      @did-dismiss="onCreateDeclamationDismissed"
+    />
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar, IonListHeader } from '@ionic/vue'
-import { defineProps, onMounted, ref } from 'vue'
-import { Verse, useVersesRepository, getVerseReference } from '@/verses'
+import {
+  IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList,
+  IonPage, IonTitle, IonToolbar, IonListHeader, IonButton, onIonViewWillEnter, IonIcon,
+} from '@ionic/vue'
+import { defineProps, ref } from 'vue'
+import { addCircleOutline } from 'ionicons/icons'
+import { RouteLocationRaw } from 'vue-router'
+import { Verse, useVersesRepository, getVerseReference, CreateDeclamationActionSheet } from '@/verses'
 import { Card, useCardsRepository } from '@/cards'
 import { Declamation, useDeclamationsRepository } from '@/declamations'
 import { go, useLongTask } from '@/shared'
-
+import router from '@/router'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -109,13 +117,14 @@ const declamationsRepo = useDeclamationsRepository()
 const verse = ref<Verse>({} as Verse)
 const cards = ref<Card[]>([])
 const declamations = ref<Declamation[]>([])
+const isCreateDeclamationOpen = ref(false)
 
 
 /* -------------------------------------------------------------------------- */
 /*                                 Lifehooks                                  */
 /* -------------------------------------------------------------------------- */
 
-onMounted(onOpened)
+onIonViewWillEnter(onOpened)
 
 
 /* -------------------------------------------------------------------------- */
@@ -126,6 +135,21 @@ async function onOpened() {
   await loadDataTask.run()
 }
 
+function onCreateDeclamationClicked() {
+  isCreateDeclamationOpen.value = true
+}
+
+function onCreateDeclamationDismissed(type: string) {
+  isCreateDeclamationOpen.value = false
+  if (!type) return
+
+  const routes: { [key: string]: RouteLocationRaw } = {
+    verse:       go('declamations:create', {verseReference: getVerseReference(verse.value.number), type: 'verse'}),
+    translation: go('declamations:create', {verseReference: verse.value._id, type: 'translation'}),
+  }
+  router.push(routes[type])
+}
+
 
 /* -------------------------------------------------------------------------- */
 /*                                    Tasks                                   */
@@ -134,6 +158,8 @@ async function onOpened() {
 async function loadData() {
   verse.value = await versesRepo.getVerse(props.id)
   cards.value = await cardsRepo.getCardsOfVerse(props.id)
-  declamations.value = await declamationsRepo.getDeclamationsOfVerseReference(getVerseReference(verse.value.number))
+  declamations.value = await declamationsRepo.getDeclamationsOfVerse(
+    [getVerseReference(verse.value.number), verse.value._id]
+  )
 }
 </script>

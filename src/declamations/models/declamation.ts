@@ -1,5 +1,6 @@
 import getUuid from 'uuid-by-string'
 
+export type DeclamationType = 'verse' | 'translation'
 
 export interface Declamation {
   /** Unique identifier for the declamation */
@@ -7,6 +8,8 @@ export interface Declamation {
 
   /** Number of VerseReference  */
   verseReference: string;
+
+  type: DeclamationType;
 
   /** Theme. Each verse might have several declamations. */
   theme: string
@@ -19,13 +22,14 @@ export interface Declamation {
 }
 
 
-export const EmptyDeclamation = (verseReference='', theme='default') => ({
+export const EmptyDeclamation = (verseReference='', type='verse', theme='default') => ({
   _id: '',
   verseReference,
+  type,
   theme,
   uri: '',
   markers: []
-})
+} as Declamation)
 
 
 export function getVerseRefenceId(verseReferenceNumber: string) {

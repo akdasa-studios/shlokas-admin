@@ -17,7 +17,7 @@
         router-direction="forward"
       >
         <h2>{{ props.declamation.verseReference }}</h2>
-        <p>{{ props.declamation.theme }}</p>
+        <p>{{ props.declamation.theme }} {{ props.declamation.type }}</p>
       </ion-label>
     </ion-item>
   </ion-item-sliding>

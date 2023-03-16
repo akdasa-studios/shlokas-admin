@@ -6,6 +6,7 @@ export { default as VerseContent } from './components/verseDetails/VerseContent.
 export { default as VerseSynonymEdit } from './components/verseDetails/VerseSynonymEdit.vue'
 export { default as VerseSynonymParser } from './components/verseDetails/VerseSynonymParser.vue'
 export { default as VerseSynonyms } from './components/verseDetails/VerseSynonyms.vue'
+export { default as CreateDeclamationActionSheet } from './components/verseDetails/CreateDeclamationActionSheet.vue'
 
 // controllers:
 export * from './controllers/useSynonymsParser'

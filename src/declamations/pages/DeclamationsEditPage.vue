@@ -40,6 +40,7 @@ import { useLongTask } from '@/shared'
 const props = defineProps<{
   id?: string,
   verseReference?: string,
+  type?: string,
 }>()
 
 /* -------------------------------------------------------------------------- */
@@ -62,7 +63,7 @@ const loadDataTask = useLongTask(loadData)
 /* -------------------------------------------------------------------------- */
 
 const declamation = ref<Declamation>(
-  EmptyDeclamation(props.verseReference, 'default')
+  EmptyDeclamation(props.verseReference ?? '', props.type ?? 'verse')
 )
 const isCreatingNew = props.id === undefined
 
