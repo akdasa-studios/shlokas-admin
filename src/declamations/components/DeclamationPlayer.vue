@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { defineProps, onMounted, onUnmounted, toRefs } from 'vue'
 import { Declamation, useWaveform } from '@/declamations'
-import { useEnvironment } from '@/shared/services/useEnvironment'
+import { useEnvironment } from '@/shared'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

@@ -27,7 +27,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: VerseEditModalContainer,
     props: route => ({
       id: route.params.id,
-      component: import('../components/verseDetails/VerseContent.vue'),
+      component: import('../components/details/VerseContent.vue'),
       componentProps: {
         disableLanguage: true,
         disableNumber: true,
@@ -41,7 +41,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: VerseEditModalContainer,
     props: route => ({
       id: route.params.id,
-      component: import('../components/verseDetails/VerseSynonyms.vue'),
+      component: import('../components/details/VerseSynonyms.vue'),
       title: 'Content'
     }),
   },

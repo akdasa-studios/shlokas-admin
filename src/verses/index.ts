@@ -2,15 +2,15 @@
 export { default as VerseTextView } from './components/VerseTextView.vue'
 export { default as VersesList } from './components/list/VersesList.vue'
 export { default as VersesListItem } from './components/list/VersesListItem.vue'
-export { default as VerseContent } from './components/verseDetails/VerseContent.vue'
-export { default as VerseSynonymEdit } from './components/verseDetails/VerseSynonymEdit.vue'
-export { default as VerseSynonymParser } from './components/verseDetails/VerseSynonymParser.vue'
-export { default as VerseSynonyms } from './components/verseDetails/VerseSynonyms.vue'
-export { default as CreateDeclamationActionSheet } from './components/verseDetails/CreateDeclamationActionSheet.vue'
+export { default as VerseContent } from './components/details/VerseContent.vue'
+export { default as VerseSynonymEdit } from './components/details/VerseSynonymEdit.vue'
+export { default as VerseSynonymParser } from './components/details/VerseSynonymParser.vue'
+export { default as VerseSynonyms } from './components/details/VerseSynonyms.vue'
+export { default as CreateDeclamationActionSheet } from './components/details/CreateDeclamationActionSheet.vue'
 
 // controllers:
-export * from './controllers/useSynonymsParser'
-export * from './controllers/useVersesRepository'
+export * from './composables/useSynonymsParser'
+export * from './services/useVersesRepository'
 
 // models:
 export * from './models/verse'

@@ -67,13 +67,13 @@
 </template>
 
 <script setup lang="ts">
-import { IonInput, IonNote, IonLabel, IonItem, IonIcon, IonButton } from '@ionic/vue'
-import { folderOpenOutline , playCircle } from 'ionicons/icons'
-import { defineProps, ref, onMounted, toRefs, watch, computed, withDefaults, onUnmounted } from 'vue'
+import { IonButton, IonIcon, IonInput, IonItem, IonLabel, IonNote } from '@ionic/vue'
+import { folderOpenOutline, playCircle } from 'ionicons/icons'
 import getUuid from 'uuid-by-string'
-import { useEnvironment } from '@/shared/services/useEnvironment'
+import { computed, defineProps, onMounted, onUnmounted, ref, toRefs, watch, withDefaults } from 'vue'
 import { useFileUploader } from '@/shared/services/useFileUploader'
-import { useWaveform , Declamation } from '@/declamations'
+import { useEnvironment } from '@/shared'
+import { Declamation, useWaveform } from '@/declamations'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
