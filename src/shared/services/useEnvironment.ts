@@ -15,9 +15,17 @@ export function useEnvironment() {
     return `${protocol}://${host}/content`
   }
 
+  function getAssetsPath(path: string) {
+    if (env === 'production') {
+      return '/admin/' + path
+    }
+    return path
+  }
+
   return {
     getTotpUrl,
     getContentUrl,
-    getDatabaseUrl
+    getDatabaseUrl,
+    getAssetsPath
   }
 }

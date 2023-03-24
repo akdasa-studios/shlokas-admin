@@ -8,7 +8,7 @@
       <div class="container">
         <div class="box">
           <img
-            src="logo.svg"
+            :src="env.getAssetsPath('logo.svg')"
             alt="Logo"
           >
 
@@ -56,6 +56,7 @@ import { ref, computed } from 'vue'
 import { IonButton, IonInput, IonPage, IonContent } from '@ionic/vue'
 import { useRouter } from 'vue-router'
 import { useAuthService, useAuthStore, useTotpService } from '@/auth'
+import { useEnvironment } from '@/shared'
 
 
 /* -------------------------------------------------------------------------- */
@@ -66,6 +67,7 @@ const authStore = useAuthStore()
 const authService = useAuthService()
 const totpService = useTotpService()
 const router = useRouter()
+const env = useEnvironment()
 
 
 /* -------------------------------------------------------------------------- */
