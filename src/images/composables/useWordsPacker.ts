@@ -1,6 +1,6 @@
 import { fabric } from 'fabric'
 import { Verse } from '@/verses'
-import { Image } from '@/images'
+import { VerseImage } from '@/images'
 
 export interface VersImagePackerOptions {
   fontFamily: string, // Georgia
@@ -12,7 +12,7 @@ export function useWordsPacker() {
   function pack(
     canvas: fabric.Canvas,
     verse: Verse,
-    card: Image,
+    verseImage: VerseImage,
     options: VersImagePackerOptions
   ) {
     const result       = [] // todo: looks useless
@@ -48,10 +48,10 @@ export function useWordsPacker() {
       text.adjustPosition('center')
     }
 
-    for (const word of card.words) {
+    for (const word of verseImage.words) {
       if (word.line === undefined) { continue }
 
-      const wordsOfLine = card.words.filter(x => x.line === word.line)
+      const wordsOfLine = verseImage.words.filter(x => x.line === word.line)
       const wordsCount = wordsOfLine.length
       const wordNum = wordsOfLine.findIndex(x => x === word)
 

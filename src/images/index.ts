@@ -1,6 +1,6 @@
-export * from './models/image'
+export * from './models/verseImage'
 export * from './routes/images'
-export * from './services/useImagesRepository'
+export * from './services/useVerseImagesRepository'
 export * from './composables/useWordsPacker'
 export * from './composables/useCanvas'
 export { default as ImagesListPage }  from './pages/ImagesListPage.vue'

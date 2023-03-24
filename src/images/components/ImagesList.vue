@@ -1,9 +1,9 @@
 <template>
   <ion-list>
     <ImagesListItem
-      v-for="card in props.images"
-      :key="card._id"
-      :card="card"
+      v-for="verseImage in props.verseImages"
+      :key="verseImage._id"
+      :verse-image="verseImage"
       @remove="(id: string) => emit('remove', id)"
     />
   </ion-list>
@@ -19,7 +19,7 @@ import { Image, ImagesListItem } from '@/images'
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  images: Image[]
+  verseImages: Image[]
 }>()
 
 const emit = defineEmits<{

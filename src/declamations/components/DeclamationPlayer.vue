@@ -36,7 +36,7 @@ const waveform   = useWaveform('#waveform', { height: 100, editableMarkers: fals
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const { uri, markers } = toRefs(props.declamation)
+const { url, markers } = toRefs(props.declamation)
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
@@ -44,8 +44,8 @@ const { uri, markers } = toRefs(props.declamation)
 
 function onOpened() {
   waveform.init()
-  if (uri.value) {
-    waveform.load(`${contentUrl}/${uri.value}`, markers.value)
+  if (url.value) {
+    waveform.load(`${contentUrl}/${url.value}`, markers.value)
   }
 }
 </script>

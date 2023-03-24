@@ -1,9 +1,8 @@
-export interface Image {
+export interface VerseImage {
   _id: string;
   verseId: string;
-  verseNumber: string;
   theme: string
-  uri: string;
+  url: string;
   words: Word[];
 }
 
@@ -17,8 +16,7 @@ export interface Word {
 export const EmptyImage = () => ({
   _id: '',
   verseId: '',
-  verseNumber: '',
   theme: '',
-  uri: '',
+  url: '',
   words: []
 })

@@ -84,7 +84,7 @@ import {
 import { defineProps, ref } from 'vue'
 import { RouteLocationRaw } from 'vue-router'
 import { Verse, useVersesRepository, getVerseReference, CreateDeclamationActionSheet } from '@/verses'
-import { Image, useImagesRepository } from '@/images'
+import { useVerseImagesRepository, VerseImage } from '@/images'
 import { Declamation, useDeclamationsRepository } from '@/declamations'
 import { go, useLongTask } from '@/shared'
 import router from '@/router'
@@ -104,7 +104,7 @@ const props = defineProps<{
 
 const loadDataTask = useLongTask(loadData)
 const versesRepo = useVersesRepository()
-const imagesRepo = useImagesRepository()
+const imagesRepo = useVerseImagesRepository()
 const declamationsRepo = useDeclamationsRepository()
 
 /* -------------------------------------------------------------------------- */
@@ -112,7 +112,7 @@ const declamationsRepo = useDeclamationsRepository()
 /* -------------------------------------------------------------------------- */
 
 const verse = ref<Verse>({} as Verse)
-const images = ref<Image[]>([])
+const images = ref<VerseImage[]>([])
 const declamations = ref<Declamation[]>([])
 const isCreateDeclamationOpen = ref(false)
 

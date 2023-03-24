@@ -3,7 +3,7 @@
     <ion-item-options>
       <ion-item-option
         color="danger"
-        @click="emit('remove', props.card._id)"
+        @click="emit('remove', props.verseImage._id)"
       >
         Delete
       </ion-item-option>
@@ -12,11 +12,11 @@
     <ion-item>
       <ion-label
         class="ion-text-wrap"
-        :router-link="'/tabs/images/' + props.card._id"
+        :router-link="'/tabs/images/' + props.verseImage._id"
         router-direction="forward"
       >
-        <h2>{{ props.card.verseNumber }}</h2>
-        <p>{{ props.card.theme }}</p>
+        <h2>{{ props.verseImage.verseId }}</h2>
+        <p>{{ props.verseImage.theme }}</p>
       </ion-label>
     </ion-item>
   </ion-item-sliding>
@@ -25,14 +25,14 @@
 <script setup lang="ts">
 import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/vue'
 import { defineProps, defineEmits } from 'vue'
-import { Image } from '@/images'
+import { VerseImage } from '@/images'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  card: Image
+  verseImage: VerseImage
 }>()
 
 const emit = defineEmits<{

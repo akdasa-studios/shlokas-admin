@@ -15,7 +15,7 @@ export interface Declamation {
   theme: string
 
   /** Path to the file */
-  uri: string;
+  url: string;
 
   /** Markers */
   markers: number[];
@@ -27,7 +27,7 @@ export const EmptyDeclamation = (verseReference='', type='verse', theme='default
   verseReference,
   type,
   theme,
-  uri: '',
+  url: '',
   markers: []
 } as Declamation)
 

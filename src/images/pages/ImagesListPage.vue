@@ -17,7 +17,7 @@
 
     <ion-content>
       <ImagesList
-        :images="images"
+        :verse-images="images"
         @remove="onImageRemove"
       />
     </ion-content>
@@ -27,13 +27,13 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from '@ionic/vue'
 import { ref } from 'vue'
-import { Image, useImagesRepository, ImagesList } from '@/images'
+import { Image, useVerseImagesRepository, ImagesList } from '@/images'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const imagesRepo = useImagesRepository()
+const imagesRepo = useVerseImagesRepository()
 
 
 /* -------------------------------------------------------------------------- */

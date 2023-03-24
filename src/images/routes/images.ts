@@ -19,7 +19,7 @@ export const routes: Array<RouteRecordRaw> = [
     path: 'images/:id',
     component:  () => import('../pages/ImagesEditPage.vue'),
     props: route => ({
-      cardId: route.params.id,
+      verseImageId: route.params.id,
     }),
   },
 ]

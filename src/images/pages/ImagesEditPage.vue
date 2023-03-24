@@ -21,7 +21,7 @@
     <ion-content>
       <ImageEditForm
         v-if="verse._id"
-        v-model="card"
+        v-model="verseImage"
         :verse="verse"
         @file-generated="onFileGenerated"
       />
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, useIonRouter } from '@ionic/vue'
 import { onMounted, ref, defineProps } from 'vue'
-import { ImageEditForm, Image, EmptyImage, useImagesRepository } from '@/images'
+import { ImageEditForm, VerseImage, EmptyImage, useVerseImagesRepository } from '@/images'
 import { useVersesRepository, Verse } from '@/verses'
 import { useEnvironment, useFileUploader } from '@/shared'
 
@@ -41,7 +41,7 @@ import { useEnvironment, useFileUploader } from '@/shared'
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  cardId?: string
+  verseImageId?: string
   verseId?: string
 }>()
 
@@ -49,7 +49,7 @@ const props = defineProps<{
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const imagesRepo = useImagesRepository()
+const imagesRepo = useVerseImagesRepository()
 const verseRepo = useVersesRepository()
 const uploader = useFileUploader(useEnvironment().getContentUrl())
 const router = useIonRouter()
@@ -58,7 +58,7 @@ const router = useIonRouter()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const card = ref<Image>(EmptyImage())
+const verseImage = ref<VerseImage>(EmptyImage())
 const verse = ref<Verse>({} as Verse)
 let generatedFile = ''
 
@@ -74,19 +74,18 @@ onMounted(async () => await onOpened())
 /* -------------------------------------------------------------------------- */
 
 async function onOpened() {
-  if (props.cardId) {
-    card.value = await imagesRepo.getImage(props.cardId)
+  if (props.verseImageId) {
+    verseImage.value = await imagesRepo.getImage(props.verseImageId)
   }
 
-  // Load verse using verseId or card.verseId
-  const verseId = props.verseId || card.value.verseId
+  // Load verse using verseId or verseImage.verseId
+  const verseId = props.verseId || verseImage.value.verseId
   verse.value = await verseRepo.getVerse(verseId)
 
-  // If cardId is not provided, initialize card with verse data
-  if (!props.cardId) {
-    card.value.verseId = verse.value._id
-    card.value.verseNumber = verse.value.number
-    card.value.words = verse.value.synonyms.map(x => ({
+  // If verseImageId is not provided, initialize verseImage with verse data
+  if (!props.verseImageId) {
+    verseImage.value.verseId = verse.value._id
+    verseImage.value.words = verse.value.synonyms.map(x => ({
       text: x.translation,
       line: x.lineNumber || 0,
       posx: 0
@@ -95,14 +94,14 @@ async function onOpened() {
 }
 
 async function onSaveClicked() {
-  const verseId = props.verseId || card.value.verseId
-  card.value.theme = card.value.theme || 'default'
+  const verseId = props.verseId || verseImage.value.verseId
+  verseImage.value.theme = verseImage.value.theme || 'default'
   if (generatedFile) {
-    const fileName = `verse-card-${verseId}-${card.value.theme}.svg`
+    const fileName = `verse-image-${verseId}-${verseImage.value.theme}.svg`
     await uploader.upload(fileName, generatedFile, 'image/svg+xml')
-    card.value.uri = fileName
+    verseImage.value.url = fileName
   }
-  await imagesRepo.saveImage(card.value)
+  await imagesRepo.saveVerseImage(verseImage.value)
   router.back()
 }
 

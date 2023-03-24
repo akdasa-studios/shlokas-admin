@@ -21,7 +21,7 @@
     @click="fileInputRef.click()"
   >
     <ion-label>File</ion-label>
-    {{ uri }}
+    {{ url }}
     <ion-icon
       slot="end"
       :icon="folderOpenOutline"
@@ -111,9 +111,9 @@ const waveform   = useWaveform('#waveform')
 /* -------------------------------------------------------------------------- */
 
 const fileInputRef = ref()
-const { verseReference, theme, uri, markers } = toRefs(props.modelValue)
+const { verseReference, theme, url, markers } = toRefs(props.modelValue)
 const isFilePickerDisabled = computed(() => !(theme.value && verseReference.value))
-const isWaveformDisabled = computed(() => !uri.value)
+const isWaveformDisabled = computed(() => !url.value)
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
@@ -121,8 +121,8 @@ const isWaveformDisabled = computed(() => !uri.value)
 
 async function onFileSelected(event: any) {
   const file = event.target.files[0]
-  await uploader.upload(uri.value, file, file.type)
-  waveform.load(`${contentUrl}/${uri.value}`)
+  await uploader.upload(url.value, file, file.type)
+  waveform.load(`${contentUrl}/${url.value}`)
 }
 
 function onPlayClicked() {
@@ -131,8 +131,8 @@ function onPlayClicked() {
 
 function onOpened() {
   waveform.init()
-  if (uri.value) {
-    waveform.load(`${contentUrl}/${uri.value}`, markers.value)
+  if (url.value) {
+    waveform.load(`${contentUrl}/${url.value}`, markers.value)
   }
 }
 
@@ -144,9 +144,9 @@ function onOpened() {
 watch([verseReference, theme], () => {
   if (verseReference.value && theme.value) {
     const uuid = getUuid(`declamation-${verseReference.value}-${theme.value}`)
-    uri.value = `declamation-${uuid}.mp3`
+    url.value = `declamation-${uuid}.mp3`
   } else {
-    uri.value = ''
+    url.value = ''
   }
 }, { immediate: true })
 
