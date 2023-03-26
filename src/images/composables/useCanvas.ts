@@ -7,6 +7,7 @@ export function useCanvas() {
   const _canvas = ref<fabric.Canvas>()
   const _selectedNode = ref()
   const _selectedText = ref('')
+  const _selectedWordIdx = ref(-1)
   const _lastModified = ref(0)
 
   function init(): fabric.Canvas {
@@ -17,13 +18,17 @@ export function useCanvas() {
     return _canvas.value
   }
 
+  function clear() {
+    _canvas.value?.clear()
+  }
+
   function update() {
     _canvas.value?.renderAll()
     _lastModified.value = new Date().getTime()
   }
 
-
   function onSelected(obj: any) {
+    _selectedWordIdx.value = obj.selected[0]?.data?.wordIdx || -1
     _selectedNode.value = obj.selected[0]
     _selectedText.value = _selectedNode.value.text
   }
@@ -48,6 +53,8 @@ export function useCanvas() {
     canvas: _canvas,
     selectedText: _selectedText,
     lastModified: _lastModified,
+    selectedWordIdx: _selectedWordIdx,
+    clear,
     toSVG,
     update,
     width

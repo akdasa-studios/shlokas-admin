@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ wordsLength }} -->
   <div id="root">
     <canvas id="canvas" />
   </div>
@@ -8,14 +9,21 @@
       placeholder="translation"
     />
   </ion-item>
+  <ion-item>
+    <ion-button
+      @click="onDeleteWord"
+    >
+      Delete
+    </ion-button>
+  </ion-item>
 </template>
 
 <script setup lang="ts">
-import { IonItem, IonTextarea } from '@ionic/vue'
+import { IonItem, IonTextarea, IonButton } from '@ionic/vue'
 import { fabric } from 'fabric'
-import { defineEmits, defineProps, onMounted, toRefs, watch } from 'vue'
+import { defineEmits, defineProps, onMounted, toRefs, watch, computed } from 'vue'
 import { Verse } from '@/verses'
-import { Image, useCanvas, useWordsPacker } from '@/images'
+import { VerseImage, useCanvas, useWordsPacker } from '@/images'
 
 
 /* -------------------------------------------------------------------------- */
@@ -24,11 +32,12 @@ import { Image, useCanvas, useWordsPacker } from '@/images'
 
 const props = defineProps<{
   verse: Verse,
-  modelValue: Image
+  modelValue: VerseImage
 }>()
 
 const emit = defineEmits<{
-  (event: 'fileGenerated', value: string): void
+  (event: 'fileGenerated', value: string): void,
+  (event: 'deleteWord', index: number): void
 }>()
 
 
@@ -44,15 +53,19 @@ const packer = useWordsPacker()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
+let canvasInstance: fabric.Canvas | undefined = undefined
+const { modelValue } = toRefs(props)
 const { words } = toRefs(props.modelValue)
 let elements: fabric.Text[] = []
+// const wordsLength = computed(() => words.value.length)
 
 
 /* -------------------------------------------------------------------------- */
 /*                                  Lifehooks                                 */
 /* -------------------------------------------------------------------------- */
 
-onMounted(() => onOpened())
+onMounted(onOpened)
+watch(modelValue, () => onOpened())
 
 
 /* -------------------------------------------------------------------------- */
@@ -69,15 +82,25 @@ watch(canvas.lastModified, () => {
 /* -------------------------------------------------------------------------- */
 
 function onOpened() {
-  const ic = canvas.init()
+  if (canvasInstance === undefined) {
+    canvasInstance = canvas.init()
+  } else {
+    console.log('CLEAR')
+    canvas.clear()
+  }
+
   elements = packer.pack(
-    ic, props.verse, props.modelValue,
+    canvasInstance, props.verse, props.modelValue,
     {
       fontFamily: 'Georgia',
       fontSize: 60,
       lineSpace: 5,
     }
   )
+}
+
+function onDeleteWord() {
+  emit('deleteWord', canvas.selectedWordIdx.value)
 }
 
 function onCanvasChanged() {

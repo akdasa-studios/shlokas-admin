@@ -48,7 +48,7 @@ export function useWordsPacker() {
       text.adjustPosition('center')
     }
 
-    for (const word of verseImage.words) {
+    for (const [idx, word] of verseImage.words.entries()) {
       if (word.line === undefined) { continue }
 
       const wordsOfLine = verseImage.words.filter(x => x.line === word.line)
@@ -70,6 +70,9 @@ export function useWordsPacker() {
         textAlign: 'center',
         opacity: .3
       })
+
+      elem.data = { wordIdx: idx }
+
       synonymNodes.push(elem)
       canvas.add(elem)
     }

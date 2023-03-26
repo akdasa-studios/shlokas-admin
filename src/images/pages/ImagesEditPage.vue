@@ -24,6 +24,7 @@
         v-model="verseImage"
         :verse="verse"
         @file-generated="onFileGenerated"
+        @delete-word="onWordDelete"
       />
     </ion-content>
   </ion-page>
@@ -91,6 +92,14 @@ async function onOpened() {
       posx: 0
     }))
   }
+}
+
+
+function onWordDelete(idx: number) {
+  console.log('!!!!')
+  const copy = {...verseImage.value}
+  copy.words.splice(idx, 1)
+  verseImage.value = copy
 }
 
 async function onSaveClicked() {
