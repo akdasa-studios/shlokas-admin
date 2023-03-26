@@ -42,7 +42,7 @@ import { Synonym, Verse } from '../../models/verse'
 
 const props = defineProps<{
   verse: Verse,
-  synonymId: number
+  synonymIdx: number
 }>()
 
 const emit = defineEmits<{
@@ -54,8 +54,8 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const synonymId = toRef(props, 'synonymId')
-const synonym = ref<Synonym>(props.verse.synonyms[props.synonymId])
+const synonymId = toRef(props, 'synonymIdx')
+const synonym = ref<Synonym>(props.verse.synonyms[props.synonymIdx])
 
 
 /* -------------------------------------------------------------------------- */
@@ -68,10 +68,10 @@ watch(synonymId, (id) => {
 
 watch(synonym, () => {
   const copy = {...props.verse}
-  copy.synonyms[props.synonymId] = toRaw(synonym.value)
+  copy.synonyms[props.synonymIdx] = toRaw(synonym.value)
   // TODO:
   // @ts-ignore
-  copy.synonyms[props.synonymId].lineNumber = parseInt(copy.synonyms[props.synonymId].lineNumber as string)
+  copy.synonyms[props.synonymIdx].lineNumber = parseInt(copy.synonyms[props.synonymIdx].lineNumber as string)
   emit('change', copy)
 })
 </script>

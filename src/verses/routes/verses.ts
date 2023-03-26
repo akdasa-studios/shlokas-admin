@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 
 const VerseDetailsPage = () => import('../pages/VersesDetailsPage.vue')
 const VerseCreatePage = () => import('../pages/VersesCreatePage.vue')
-const VerseEditModalContainer = () => import('../pages/VersesEditPageContainer.vue')
+const VersesEditPageContainer = () => import('../pages/VersesEditPageContainer.vue')
 
 
 export const routes: Array<RouteRecordRaw> = [
@@ -24,7 +24,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     name: 'verses:content',
     path: 'verses/:id/content',
-    component: VerseEditModalContainer,
+    component: VersesEditPageContainer,
     props: route => ({
       id: route.params.id,
       component: import('../components/details/VerseContent.vue'),
@@ -38,11 +38,24 @@ export const routes: Array<RouteRecordRaw> = [
   {
     name: 'verses:synonyms',
     path: 'verses/:id/synonyms',
-    component: VerseEditModalContainer,
+    component: VersesEditPageContainer,
     props: route => ({
       id: route.params.id,
       component: import('../components/details/VerseSynonyms.vue'),
       title: 'Content'
+    }),
+  },
+  {
+    name: 'verses:synonym',
+    path: 'verses/:id/synonyms/:synonymIdx',
+    component: VersesEditPageContainer,
+    props: route => ({
+      id: route.params.id,
+      component: import('../components/details/VerseSynonymEdit.vue'),
+      componentProps: {
+        synonymIdx: parseInt(route.params.synonymIdx as string)
+      },
+      title: 'Synonym'
     }),
   },
 ]

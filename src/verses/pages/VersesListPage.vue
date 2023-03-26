@@ -64,8 +64,26 @@ async function onVerseRemove(id: string) {
 }
 
 async function refresh() {
-  verses.value = await versesRepo.getAllVerses()
+  const repoVerses = await versesRepo.getAllVerses()
+  verses.value = repoVerses.sort((a: Verse, b: Verse) => compare(a.number, b.number))
 }
+
+
+function compare(a: string, b: string): number {
+  const tokens1 = a.split(/\.| /)
+  const tokens2 = b.split(/\.| /)
+  for (const [idx] of tokens1.entries()) {
+    if (idx == 0) {
+      if (tokens1[idx] > tokens2[idx]) { return 1 }
+      if (tokens1[idx] < tokens2[idx]) { return -1 }
+    } else {
+      const c = parseInt(tokens1[idx]) - parseInt(tokens2[idx])
+      if (c != 0) return c
+    }
+  }
+  return 0
+}
+
 
 async function onSync() {
   try {
