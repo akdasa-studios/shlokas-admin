@@ -1,6 +1,6 @@
 export function useEnvironment() {
-  const env = process.env.NODE_ENV
-  const host = env === 'production' ? 'shlokas.app' : 'localhost'
+  const env      = window.location.host === 'localhost' ? 'development' : 'production'
+  const host     = env === 'production' ? 'shlokas.app' : 'localhost'
   const protocol = env === 'production' ? 'https' : 'http'
 
   function getDatabaseUrl(login: string, password: string, database: string) {
@@ -16,10 +16,9 @@ export function useEnvironment() {
   }
 
   function getAssetsPath(path: string) {
-    if (env === 'production') {
-      return '/admin/' + path
-    }
-    return path
+    const port = window.location.port
+    if (port) { return path }
+    return '/admin/' + path
   }
 
   return {

@@ -8,7 +8,7 @@ export function useSync() {
   const _isSyncing = ref(false)
 
   async function sync() {
-    const env = process.env.NODE_ENV
+    const env = window.location.host === 'localhost' ? 'development' : 'production'
     const host = env === 'production' ? 'shlokas.app' : 'localhost'
     const protocol = env === 'production' ? 'https' : 'http'
 

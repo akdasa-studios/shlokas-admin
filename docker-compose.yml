@@ -5,4 +5,3 @@ services:
     ports:
       - 8080:80
 
-  # no services defined
