@@ -1,6 +1,6 @@
 <template>
-  <!-- {{ wordsLength }} -->
-  <div id="root">
+  <span class="georgia">Edit image:</span>
+  <div class="editor">
     <canvas id="canvas" />
   </div>
   <ion-item>
@@ -21,7 +21,10 @@
 <script setup lang="ts">
 import { IonItem, IonTextarea, IonButton } from '@ionic/vue'
 import { fabric } from 'fabric'
-import { defineEmits, defineProps, onMounted, toRefs, watch, computed } from 'vue'
+import { defineEmits, defineProps, onMounted, toRefs, watch } from 'vue'
+import Session from 'svg-text-to-path'
+import FontkitFont from 'svg-text-to-path/renderer/FontkitFont.js'
+
 import { Verse } from '@/verses'
 import { VerseImage, useCanvas, useWordsPacker } from '@/images'
 
@@ -65,7 +68,7 @@ let elements: fabric.Text[] = []
 /* -------------------------------------------------------------------------- */
 
 onMounted(onOpened)
-watch(modelValue, () => onOpened())
+watch(modelValue, onOpened)
 
 
 /* -------------------------------------------------------------------------- */
@@ -82,6 +85,13 @@ watch(canvas.lastModified, () => {
 /* -------------------------------------------------------------------------- */
 
 function onOpened() {
+  // Georgia font is have to be loaded before canvas init
+  // otherwise it will mess up with sizes of words
+  if (!document.fonts.check('1em Georgia')) {
+    setTimeout(onOpened, 250)
+    return
+  }
+
   if (canvasInstance === undefined) {
     canvasInstance = canvas.init()
   } else {
@@ -103,18 +113,33 @@ function onDeleteWord() {
   emit('deleteWord', canvas.selectedWordIdx.value)
 }
 
-function onCanvasChanged() {
+async function onCanvasChanged() {
   for (const [key, elem] of elements.entries()) {
     words.value[key].posx = (elem.left || 0) / (canvas.width() || 0)
     words.value[key].text = (elem.text || '')
   }
 
-  emit('fileGenerated', canvas.toSVG())
+  let fileContent = canvas.toSVG()
+
+  Session.defaultRenderer = FontkitFont
+  let session = new Session(fileContent, {
+    useFontFace: true,
+    renderer: FontkitFont,
+  })
+  await session.replaceAll()
+  fileContent = session.getSvgString()
+
+  emit('fileGenerated', fileContent)
 }
 </script>
 
+
 <style scoped>
-#root {
+.georgia {
+  font-family: 'Georgia';
+}
+
+.editor {
   display: flex;
   justify-content: center;
 }
