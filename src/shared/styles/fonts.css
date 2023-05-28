@@ -15,7 +15,7 @@
       /* local('Georgia Italic'), local('Georgia-Italic'), */
       /* url('../../../public/assets/Georgia Italic.woff2') format('woff2'), */
       /* url('../../../public/assets/Georgia Italic.woff') format('woff'), */
-      url('../../../public/assets/Georgia Italic.ttf') format('truetype');
+      url('../../../public/assets/Georgia-Italic.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
