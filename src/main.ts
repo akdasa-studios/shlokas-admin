@@ -22,6 +22,7 @@ import '@ionic/vue/css/display.css'
 
 /* Theme variables */
 import './shared/styles/variables.css'
+import './shared/styles/fonts.css'
 
 const pinia = createPinia()
 

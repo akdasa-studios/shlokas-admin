@@ -40,7 +40,7 @@ export function useWordsPacker() {
     }
 
     canvas.setWidth(canvasWidth)
-    canvas.setHeight(canvasHeight * verse.text.length)
+    canvas.setHeight(canvasHeight * verse.text.length + 5)
 
     for (const [i, text] of result.entries()) {
       text.left = canvasWidth / 2
