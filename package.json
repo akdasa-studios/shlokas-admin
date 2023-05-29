@@ -36,7 +36,6 @@
     "pouchdb": "^8.0.1",
     "pouchdb-find": "^8.0.1",
     "pouchdb-upsert": "^2.2.0",
-    "svg-text-to-path": "^2.0.2",
     "transliteration": "^2.3.5",
     "uuid-by-string": "^4.0.0",
     "vue": "^3.2.47",

@@ -61,7 +61,7 @@ const router = useIonRouter()
 
 const verseImage = ref<VerseImage>(EmptyImage())
 const verse = ref<Verse>({} as Verse)
-let generatedFile = ''
+let generatedFile: Blob
 
 /* -------------------------------------------------------------------------- */
 /*                                  Lifehooks                                 */
@@ -96,7 +96,6 @@ async function onOpened() {
 
 
 function onWordDelete(idx: number) {
-  console.log('!!!!')
   const copy = {...verseImage.value}
   copy.words.splice(idx, 1)
   verseImage.value = copy
@@ -105,16 +104,16 @@ function onWordDelete(idx: number) {
 async function onSaveClicked() {
   const verseId = props.verseId || verseImage.value.verseId
   verseImage.value.theme = verseImage.value.theme || 'default'
-  if (generatedFile) {
-    const fileName = `verse-image-${verseId}-${verseImage.value.theme}.svg`
-    await uploader.upload(fileName, generatedFile, 'image/svg+xml')
+  if (generatedFile.size > 0) {
+    const fileName = `verse-image-${verseId}-${verseImage.value.theme}.png`
+    await uploader.upload(fileName, generatedFile, 'image/x-png')
     verseImage.value.url = fileName
   }
   await imagesRepo.saveVerseImage(verseImage.value)
   router.back()
 }
 
-function onFileGenerated(file: string) {
+function onFileGenerated(file: Blob) {
   generatedFile = file
 }
 

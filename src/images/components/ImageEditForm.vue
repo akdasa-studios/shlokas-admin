@@ -22,8 +22,6 @@
 import { IonItem, IonTextarea, IonButton } from '@ionic/vue'
 import { fabric } from 'fabric'
 import { defineEmits, defineProps, onMounted, toRefs, watch } from 'vue'
-import Session from 'svg-text-to-path'
-import FontkitFont from 'svg-text-to-path/renderer/FontkitFont.js'
 
 import { Verse } from '@/verses'
 import { VerseImage, useCanvas, useWordsPacker } from '@/images'
@@ -39,7 +37,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'fileGenerated', value: string): void,
+  (event: 'fileGenerated', value: Blob): void,
   (event: 'deleteWord', index: number): void
 }>()
 
@@ -119,17 +117,7 @@ async function onCanvasChanged() {
     words.value[key].text = (elem.text || '')
   }
 
-  let fileContent = canvas.toSVG()
-
-  Session.defaultRenderer = FontkitFont
-  let session = new Session(fileContent, {
-    useFontFace: true,
-    renderer: FontkitFont,
-  })
-  await session.replaceAll()
-  fileContent = session.getSvgString()
-
-  emit('fileGenerated', fileContent)
+  emit('fileGenerated', await canvas.toPNG())
 }
 </script>
 

@@ -48,6 +48,7 @@
           :router-link="go('images:edit', {id: image._id})"
         >
           {{ image.theme }}
+          {{ image.url }}
         </ion-item>
 
         <!-- Declamations -->

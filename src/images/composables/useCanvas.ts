@@ -37,8 +37,14 @@ export function useCanvas() {
     return _canvas.value?.getWidth() || 0
   }
 
-  function toSVG() {
-    return _canvas.value?.toSVG() || ''
+  async function toPNG() {
+    const data = _canvas.value?.toDataURL({
+      format: 'png',
+      enableRetinaScaling: true
+    })
+    // @ts-ignore
+    const res = await fetch(data)
+    return res.blob()
   }
 
   watch(_selectedText, (text) => {
@@ -55,7 +61,7 @@ export function useCanvas() {
     lastModified: _lastModified,
     selectedWordIdx: _selectedWordIdx,
     clear,
-    toSVG,
+    toPNG,
     update,
     width
   }
