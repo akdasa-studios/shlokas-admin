@@ -19,6 +19,8 @@ export function useWordsPacker() {
     const synonymNodes = [] // todo: looks useless
     let canvasWidth    = 0
     let canvasHeight   = 0
+    const noLinesBreakdown = verseImage.words.every(x => x.line === 0)
+    if (noLinesBreakdown) { options.lineSpace = 0 }
 
     // Stage 1: Pack verse lines
     for (const line of verse.text) {
@@ -48,34 +50,39 @@ export function useWordsPacker() {
       text.adjustPosition('center')
     }
 
-    for (const [idx, word] of verseImage.words.entries()) {
-      if (word.line === undefined) { continue }
 
-      const wordsOfLine = verseImage.words.filter(x => x.line === word.line)
-      const wordsCount = wordsOfLine.length
-      const wordNum = wordsOfLine.findIndex(x => x === word)
 
-      const txt = word.text
-      const elem = new fabric.Text(txt, {
-        top: (canvasHeight * (word.line+1)) - (options.fontSize / 2),
-        left: word.posx ? word.posx * canvasWidth : (canvasWidth / (wordsCount+1)) * (wordNum+1),
-        originX: 'center',
-        originY: 'top',
-        fontSize: options.fontSize/2,
-        lineHeight: .75,
-        fontFamily: options.fontFamily,
-        fontStyle: 'italic',
-        hasControls: false,
-        lockMovementY: true,
-        textAlign: 'center',
-        opacity: .3
-      })
+    if (!noLinesBreakdown) {
+      for (const [idx, word] of verseImage.words.entries()) {
+        if (word.line === undefined) { continue }
 
-      elem.data = { wordIdx: idx }
+        const wordsOfLine = verseImage.words.filter(x => x.line === word.line)
+        const wordsCount = wordsOfLine.length
+        const wordNum = wordsOfLine.findIndex(x => x === word)
 
-      synonymNodes.push(elem)
-      canvas.add(elem)
+        const txt = word.text
+        const elem = new fabric.Text(txt, {
+          top: (canvasHeight * (word.line+1)) - (options.fontSize / 2),
+          left: word.posx ? word.posx * canvasWidth : (canvasWidth / (wordsCount+1)) * (wordNum+1),
+          originX: 'center',
+          originY: 'top',
+          fontSize: options.fontSize/2,
+          lineHeight: .75,
+          fontFamily: options.fontFamily,
+          fontStyle: 'italic',
+          hasControls: false,
+          lockMovementY: true,
+          textAlign: 'center',
+          opacity: .3
+        })
+
+        elem.data = { wordIdx: idx }
+
+        synonymNodes.push(elem)
+        canvas.add(elem)
+      }
     }
+
     canvas.renderAll()
     return synonymNodes
   }
